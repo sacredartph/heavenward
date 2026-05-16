@@ -1,0 +1,26 @@
+{
+  "name": "heavenward",
+  "version": "0.9.0",
+  "description": "Heavenward - a Catholic family companion app. Through the family, individuals go to heaven.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "init": "node database/init.js",
+    "seed": "node database/seed.js",
+    "setup": "node database/init.js && node database/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "better-sqlite3": "^12.10.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Bryan Eleazar Loyola Manubag",
+  "license": "Proprietary - Manubag Family / Sacred Art PH"
+}

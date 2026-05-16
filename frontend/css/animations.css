@@ -1,0 +1,52 @@
+/* Heavenward - candle flame and ambient motion. */
+
+.candle { position: relative; width: 60px; height: 110px; }
+.candle .wick {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 28px; width: 3px; height: 14px; background: #2a2a44; border-radius: 1px;
+}
+.candle .flame {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 40px; width: 26px; height: 50px;
+  pointer-events: none;
+}
+.candle .flame span {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 100%; width: 100%;
+  background: radial-gradient(ellipse at 50% 90%, #ffd877 0%, #ffb347 40%, #c9a84c 75%, rgba(201,168,76,0) 100%);
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+  filter: blur(.4px);
+  transform-origin: 50% 100%;
+  animation: flicker 1.6s ease-in-out infinite alternate;
+  box-shadow: 0 0 30px 8px rgba(201,168,76,.35);
+}
+@keyframes flicker {
+  0%   { transform: translateY(0) scale(1, 1) rotate(-1deg); opacity: 1; }
+  20%  { transform: translateY(-1px) scale(1.04, .96) rotate(1deg); opacity: .94; }
+  40%  { transform: translateY(0) scale(.98, 1.02) rotate(-2deg); opacity: 1; }
+  60%  { transform: translateY(-2px) scale(1.06, .94) rotate(2deg); opacity: .9; }
+  80%  { transform: translateY(0) scale(1, 1) rotate(-1deg); opacity: 1; }
+  100% { transform: translateY(-1px) scale(1.02, .98) rotate(1deg); opacity: .96; }
+}
+
+/* Small inline candle (for Repository, Hearth) */
+.candle-small { position: relative; width: 22px; height: 32px; display: inline-block; vertical-align: middle; }
+.candle-small .flame {
+  position: absolute; left: 0; right: 0; top: 0;
+  height: 18px;
+  background: radial-gradient(ellipse at 50% 90%, #ffd877 0%, #ffb347 50%, rgba(201,168,76,0) 100%);
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+  animation: flicker 1.6s ease-in-out infinite alternate;
+  filter: blur(.3px);
+}
+.candle-small .stick { position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 6px; height: 16px; background: var(--gold); border-radius: 2px; }
+
+/* Gentle pulse for active glow cards */
+.glow:hover { box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 6px 22px rgba(201,168,76,.18); }
+
+/* Subtle attention for the Morning / Night cards when not done */
+.card.glow.unfinished { animation: gentle-pulse 4s ease-in-out infinite; }
+@keyframes gentle-pulse {
+  0%, 100% { box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06); }
+  50%      { box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 6px 22px rgba(201,168,76,.22); }
+}

@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A1A2E">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Heavenward">
+<title>Heavenward</title>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<section id="screen-splash" class="screen screen-splash visible">
+  <div class="splash-inner">
+    <div class="splash-candle">
+      <div class="candle">
+        <div class="wick"></div>
+        <div class="flame"><span></span></div>
+      </div>
+    </div>
+    <h1 class="splash-name">HEAVENWARD</h1>
+    <p class="splash-tag">Through the family, individuals go to heaven.</p>
+    <p class="splash-ded">Soli Deo Gloria. For the Manubag family of Sibonga, Cebu.<br>St. Lorenzo Ruiz and Bl. Pedro Calungsod, pray for us.</p>
+  </div>
+</section>
+
+<!-- LOGIN -->
+<section id="screen-login" class="screen screen-login">
+  <div class="login-card">
+    <h2>Welcome home.</h2>
+    <p class="muted">Sign in to your family.</p>
+    <form id="form-login">
+      <label>Email<input type="email" name="email" required autocomplete="email"></label>
+      <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+      <button class="primary" type="submit">Enter the home</button>
+    </form>
+    <p class="login-sep">— or —</p>
+    <button class="ghost" id="btn-go-register">Begin a new family</button>
+    <p class="login-test muted small">Test family: tatay@manubag.ph / heavenward2026 - or - nanay@manubag.ph / heavenward2026</p>
+  </div>
+</section>
+
+<!-- ONBOARDING -->
+<section id="screen-onboard" class="screen screen-onboard">
+  <div class="login-card">
+    <h2>Begin a Catholic family.</h2>
+    <p class="muted">This is your family's home before God.</p>
+    <form id="form-register">
+      <label>Family name<input name="family_name" required placeholder="Manubag"></label>
+      <label>Patron saint
+        <select name="patron_saint_slug" id="onboard-patron">
+          <option value="lorenzo-ruiz">St. Lorenzo Ruiz</option>
+          <option value="pedro-calungsod">Bl. Pedro Calungsod</option>
+          <option value="joseph">St. Joseph</option>
+          <option value="mary">Blessed Virgin Mary</option>
+          <option value="therese-of-lisieux">St. Therese of Lisieux</option>
+          <option value="john-paul-ii">St. John Paul II</option>
+        </select>
+      </label>
+      <fieldset>
+        <legend>Tatay</legend>
+        <label>Display name<input name="tatay_name" required placeholder="Tatay"></label>
+        <label>Email<input type="email" name="tatay_email" required></label>
+        <label>Password<input type="password" name="tatay_password" required minlength="6"></label>
+      </fieldset>
+      <fieldset>
+        <legend>Nanay <span class="muted small">(optional now, can add later)</span></legend>
+        <label>Display name<input name="nanay_name" placeholder="Nanay"></label>
+        <label>Email<input type="email" name="nanay_email"></label>
+        <label>Password<input type="password" name="nanay_password" minlength="6"></label>
+      </fieldset>
+      <button class="primary" type="submit">Seal this family</button>
+      <button class="ghost" type="button" id="btn-onboard-back">Back to sign in</button>
+    </form>
+  </div>
+</section>
+
+<!-- HOME -->
+<section id="screen-home" class="screen screen-home">
+  <header class="topbar">
+    <div class="brand">Heavenward</div>
+    <div class="who"><span id="who-name"></span> <button class="link" id="btn-logout">sign out</button></div>
+  </header>
+
+  <div class="home-greeting">
+    <p class="muted" id="liturgical-line">—</p>
+    <h2 id="greeting-line">Welcome home.</h2>
+  </div>
+
+  <div class="home-saint card" id="home-saint"></div>
+
+  <div class="home-prayer-cards">
+    <button class="card glow" id="card-morning">
+      <h3>Morning Offering</h3>
+      <p class="muted small">Begin the day with him.</p>
+    </button>
+    <button class="card glow" id="card-rosary">
+      <h3>Begin the Rosary</h3>
+      <p class="muted small" id="rosary-set">—</p>
+    </button>
+    <button class="card glow" id="card-night">
+      <h3>Night Prayer & Examen</h3>
+      <p class="muted small">Close the day in peace.</p>
+    </button>
+  </div>
+
+  <div class="home-presence card">
+    <h3>The family today</h3>
+    <div id="presence-row" class="presence-row"></div>
+  </div>
+
+  <div class="home-emergency card hidden" id="emergency-card"></div>
+
+  <div class="moment card">
+    <h3>How are you right now?</h3>
+    <p class="muted small">Tap one. He is listening.</p>
+    <div class="moment-buttons">
+      <button data-moment="tired">Tired</button>
+      <button data-moment="grateful">Grateful</button>
+      <button data-moment="working">Working</button>
+      <button data-moment="struggling">Struggling</button>
+      <button data-moment="joyful">Joyful</button>
+      <button data-moment="sick">Sick</button>
+      <button data-moment="angry">Angry</button>
+      <button data-moment="afraid">Afraid</button>
+      <button data-moment="peaceful">Peaceful</button>
+      <button data-moment="loved">Loved</button>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-screen="home">Home</button>
+    <button class="nav-btn" data-screen="walk-launch">Walk</button>
+    <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
+    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="hearth">Hearth</button>
+    <button class="nav-btn" data-screen="saints">Saints</button>
+  </nav>
+</section>
+
+<!-- WALK LAUNCH -->
+<section id="screen-walk-launch" class="screen screen-walk-launch">
+  <header class="topbar"><div class="brand">The Walk</div></header>
+  <div class="walk-launch card">
+    <h2 id="walk-set-name">—</h2>
+    <p class="muted">Mystery set for today.</p>
+    <label class="row"><input type="radio" name="walk-mode" value="solo" checked> Walk solo</label>
+    <label class="row"><input type="radio" name="walk-mode" value="family"> Walk with family</label>
+    <button class="primary" id="btn-begin-rosary">Begin the rosary</button>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-screen="home">Home</button>
+    <button class="nav-btn active" data-screen="walk-launch">Walk</button>
+    <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
+    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="hearth">Hearth</button>
+    <button class="nav-btn" data-screen="saints">Saints</button>
+  </nav>
+</section>
+
+<!-- WALK ACTIVE -->
+<section id="screen-walk-active" class="screen screen-walk-active full-screen">
+  <div class="walk-active">
+    <h2 id="walk-mystery-name">—</h2>
+    <p class="walk-scripture" id="walk-scripture">—</p>
+    <p class="walk-reflection" id="walk-reflection">—</p>
+    <p class="walk-question" id="walk-question">—</p>
+    <div class="bead-counter" id="bead-counter"></div>
+    <div class="walk-meta">
+      <span>Decade <span id="decade-num">1</span> of 5</span>
+      <span>Steps: <span id="step-count">0</span></span>
+    </div>
+    <button class="ghost small" id="btn-next-decade">Next decade</button>
+    <button class="ghost small" id="btn-end-walk">End walk early</button>
+  </div>
+</section>
+
+<!-- WALK TAIL -->
+<section id="screen-walk-tail" class="screen screen-walk-tail full-screen">
+  <div class="walk-tail">
+    <h2>The Tail Prayers</h2>
+    <div id="tail-list"></div>
+    <button class="primary" id="btn-finish-walk">We have finished. Amen.</button>
+  </div>
+</section>
+
+<!-- WHISPER MOMENT -->
+<section id="screen-whisper-moment" class="screen screen-whisper-moment">
+  <header class="topbar"><div class="brand">The Whisper</div></header>
+  <div class="moment card">
+    <h3>How are you right now?</h3>
+    <p class="muted small">He hears.</p>
+    <div class="moment-buttons">
+      <button data-moment="tired">Tired</button>
+      <button data-moment="grateful">Grateful</button>
+      <button data-moment="working">Working</button>
+      <button data-moment="struggling">Struggling</button>
+      <button data-moment="joyful">Joyful</button>
+      <button data-moment="sick">Sick</button>
+      <button data-moment="angry">Angry</button>
+      <button data-moment="afraid">Afraid</button>
+      <button data-moment="peaceful">Peaceful</button>
+      <button data-moment="loved">Loved</button>
+      <button data-moment="confession">Confession</button>
+      <button data-moment="temptation">Temptation</button>
+      <button data-moment="family">Family</button>
+      <button data-moment="vocation">Vocation</button>
+    </div>
+    <label class="row mt">Or write a word: <input id="whisper-free" maxlength="50" placeholder="optional"></label>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-screen="home">Home</button>
+    <button class="nav-btn" data-screen="walk-launch">Walk</button>
+    <button class="nav-btn active" data-screen="whisper-moment">Whisper</button>
+    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="hearth">Hearth</button>
+    <button class="nav-btn" data-screen="saints">Saints</button>
+  </nav>
+</section>
+
+<!-- WHISPER DISPLAY -->
+<section id="screen-whisper-display" class="screen screen-whisper-display full-screen">
+  <div class="whisper-display">
+    <p class="whisper-scripture" id="w-scripture">—</p>
+    <p class="whisper-ref muted" id="w-ref">—</p>
+    <div class="whisper-saint">
+      <h4 id="w-saint-name">—</h4>
+      <p id="w-saint-text">—</p>
+    </div>
+    <p class="whisper-truth" id="w-truth">—</p>
+    <button class="primary mt-lg" id="btn-whisper-received">I received this.</button>
+    <button class="ghost small" id="btn-whisper-dismiss">Dismiss</button>
+  </div>
+</section>
+
+<!-- PRAYER -->
+<section id="screen-prayer" class="screen screen-prayer">
+  <header class="topbar"><div class="brand">Prayer</div></header>
+  <div class="tabs">
+    <button class="tab active" data-tab="petitions">Petitions</button>
+    <button class="tab" data-tab="sick">Sick</button>
+    <button class="tab" data-tab="thanksgiving">Thanksgiving</button>
+    <button class="tab" data-tab="inventory">Inventory</button>
+    <button class="tab" data-tab="dead">Book of the Dead</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-petitions">
+    <div class="card">
+      <h3>Add a petition</h3>
+      <form id="form-petition">
+        <label>Person (optional)<input name="person_name"></label>
+        <label>Petition<textarea name="petition" required></textarea></label>
+        <label>Level
+          <select name="level">
+            <option value="3" selected>Active (3)</option>
+            <option value="4">Ongoing (4)</option>
+            <option value="2">Urgent (2)</option>
+            <option value="1">Emergency (1)</option>
+          </select>
+        </label>
+        <button class="primary" type="submit">Add to prayer</button>
+      </form>
+    </div>
+    <div id="petition-list"></div>
+  </div>
+
+  <div class="tab-panel" id="tab-sick">
+    <div class="card">
+      <h3>Add to the sick list</h3>
+      <form id="form-sick">
+        <label>Person<input name="person_name" required></label>
+        <label>Relationship<input name="relationship"></label>
+        <label>Intention<textarea name="intention" required></textarea></label>
+        <button class="primary" type="submit">Add to prayer</button>
+      </form>
+    </div>
+    <div id="sick-list"></div>
+  </div>
+
+  <div class="tab-panel" id="tab-thanksgiving">
+    <div class="card">
+      <h3>Add thanksgiving</h3>
+      <form id="form-thx">
+        <label>Person (optional)<input name="person_name"></label>
+        <label>Thanksgiving<textarea name="thanksgiving_text" required></textarea></label>
+        <button class="primary" type="submit">Offer thanksgiving</button>
+      </form>
+    </div>
+    <div id="thx-list"></div>
+  </div>
+
+  <div class="tab-panel" id="tab-inventory">
+    <div class="card">
+      <input id="inv-search" placeholder="Search the inventory…">
+    </div>
+    <div id="inv-list"></div>
+  </div>
+
+  <div class="tab-panel" id="tab-dead">
+    <div class="card" id="dead-add-card">
+      <h3>Add to the Book of the Dead</h3>
+      <form id="form-dead">
+        <label>Full name<input name="full_name" required></label>
+        <label>Relationship<input name="relationship"></label>
+        <label>Birthdate<input type="date" name="birthdate"></label>
+        <label>Day of death<input type="date" name="death_date"></label>
+        <label>Brief story<textarea name="brief_story" placeholder="a few sentences, kept gently"></textarea></label>
+        <button class="primary" type="submit">Add to the Book</button>
+      </form>
+    </div>
+    <div id="dead-list"></div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-screen="home">Home</button>
+    <button class="nav-btn" data-screen="walk-launch">Walk</button>
+    <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
+    <button class="nav-btn active" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="hearth">Hearth</button>
+    <button class="nav-btn" data-screen="saints">Saints</button>
+  </nav>
+</section>
+
+<!-- HEARTH -->
+<section id="screen-hearth" class="screen screen-hearth">
+  <header class="topbar"><div class="brand">The Hearth</div></header>
+  <div id="hearth-presence" class="card"></div>
+  <div id="hearth-candles" class="card"></div>
+
+  <div class="card hidden" id="add-member-card">
+    <h3>Add a family member</h3>
+    <p class="muted small">Tatay or Nanay creates the account. You will share the email and password with them.</p>
+    <form id="form-add-member">
+      <label>Display name<input name="display_name" required placeholder="e.g. Joaquin"></label>
+      <label>Email (used for sign-in)<input type="email" name="email" required placeholder="joaquin@manubag.ph"></label>
+      <label>Password<input type="text" name="password" required minlength="6" placeholder="something they can remember"></label>
+      <label>Role
+        <select name="role">
+          <option value="child" selected>Child</option>
+          <option value="grandparent">Grandparent</option>
+          <option value="other">Other (sibling, ninong, etc.)</option>
+          <option value="tatay">Tatay (co-admin)</option>
+          <option value="nanay">Nanay (co-admin)</option>
+        </select>
+      </label>
+      <label>Date of birth (sets age tier)<input type="date" name="date_of_birth"></label>
+      <label>Patron saint (optional)
+        <select name="patron_saint_slug">
+          <option value="">(none yet)</option>
+          <option value="lorenzo-ruiz">St. Lorenzo Ruiz</option>
+          <option value="pedro-calungsod">Bl. Pedro Calungsod</option>
+          <option value="joseph">St. Joseph</option>
+          <option value="mary">Blessed Virgin Mary</option>
+          <option value="therese-of-lisieux">St. Therese of Lisieux</option>
+          <option value="john-paul-ii">St. John Paul II</option>
+          <option value="kateri">St. Kateri Tekakwitha</option>
+          <option value="pier-giorgio-frassati">Bl. Pier Giorgio Frassati</option>
+          <option value="dominic">St. Dominic</option>
+          <option value="cecilia">St. Cecilia</option>
+        </select>
+      </label>
+      <button class="primary" type="submit">Add to the family</button>
+    </form>
+    <div id="add-member-result" class="hidden"></div>
+  </div>
+
+  <div id="hearth-feed"></div>
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-screen="home">Home</button>
+    <button class="nav-btn" data-screen="walk-launch">Walk</button>
+    <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
+    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn active" data-screen="hearth">Hearth</button>
+    <button class="nav-btn" data-screen="saints">Saints</button>
+  </nav>
+</section>
+
+<!-- MORNING -->
+<section id="screen-morning" class="screen screen-morning full-screen">
+  <div class="morning-inner card" id="morning-body"></div>
+  <button class="primary" id="btn-morning-offered">I have offered my day.</button>
+  <button class="ghost small" id="btn-morning-back">Back</button>
+</section>
+
+<!-- NIGHT -->
+<section id="screen-night" class="screen screen-night full-screen">
+  <div class="night-inner" id="night-body"></div>
+  <button class="primary" id="btn-night-examined">I have examined my day.</button>
+  <button class="ghost small" id="btn-night-back">Back</button>
+</section>
+
+<!-- SAINTS -->
+<section id="screen-saints" class="screen screen-saints">
+  <header class="topbar"><div class="brand">The Saints</div></header>
+  <div class="card">
+    <h3>Saint of the day</h3>
+    <div id="saint-today"></div>
+  </div>
+  <div class="card">
+    <input id="saints-search" placeholder="Search saints by name, patronage, nationality…">
+  </div>
+  <div class="card">
+    <h3>Filipino patrons</h3>
+    <div id="saints-filipino"></div>
+  </div>
+  <div id="saints-list"></div>
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-screen="home">Home</button>
+    <button class="nav-btn" data-screen="walk-launch">Walk</button>
+    <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
+    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="hearth">Hearth</button>
+    <button class="nav-btn active" data-screen="saints">Saints</button>
+  </nav>
+</section>
+
+<!-- SAINT PROFILE -->
+<section id="screen-saint-profile" class="screen screen-saint-profile">
+  <header class="topbar"><div class="brand">Saint</div><button class="link" id="btn-saint-back">Back</button></header>
+  <div id="saint-profile-body" class="card"></div>
+</section>
+
+<div id="toast" class="toast"></div>
+
+<script src="/js/audio.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/whisper.js"></script>
+<script src="/js/walk.js"></script>
+<script src="/js/hearth.js"></script>
+<script src="/js/prayer.js"></script>
+<script src="/js/dead.js"></script>
+<script src="/js/hours.js"></script>
+<script src="/js/app.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function(reg) { console.log('Heavenward SW registered:', reg.scope); })
+        .catch(function(err) { console.log('SW registration failed:', err); });
+    });
+  }
+</script>
+
+</body>
+</html>
