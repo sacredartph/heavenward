@@ -61,12 +61,31 @@ router.post('/login', (req, res) => {
   if (!user) return res.status(401).json({ error: 'invalid credentials' });
   if (!bcrypt.compareSync(password, user.password_hash)) return res.status(401).json({ error: 'invalid credentials' });
   db.prepare('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?').run(user.id);
-  const safe = { id: user.id, email: user.email, display_name: user.display_name, role: user.role, family_id: user.family_id };
-  return res.json({ token: sign(user), user: safe });
+  const full = db.prepare('SELECT id,email,display_name,role,family_id,patron_saint_slug,age_tier,vocation,streak_days FROM users WHERE id = ?').get(user.id);
+  return res.json({ token: sign(user), user: full });
 });
 
 router.get('/me', requireAuth, (req, res) => {
   return res.json({ user: req.user });
+});
+
+// Self-edit: any signed-in user can update their own display name + patron saint.
+// Role changes still require a parent (handled in /family/member/:id).
+router.put('/me', requireAuth, (req, res) => {
+  const allow = ['display_name', 'patron_saint_slug', 'confirmation_name'];
+  const updates = [];
+  const values = [];
+  for (const f of allow) {
+    if (req.body && Object.prototype.hasOwnProperty.call(req.body, f)) {
+      updates.push(f + ' = ?');
+      values.push(req.body[f]);
+    }
+  }
+  if (!updates.length) return res.status(400).json({ error: 'nothing to update' });
+  values.push(req.user.id);
+  db.prepare('UPDATE users SET ' + updates.join(', ') + ' WHERE id = ?').run(...values);
+  const user = db.prepare('SELECT id,email,display_name,role,family_id,patron_saint_slug,age_tier,vocation,streak_days FROM users WHERE id = ?').get(req.user.id);
+  return res.json({ user });
 });
 
 router.post('/sso', (req, res) => {

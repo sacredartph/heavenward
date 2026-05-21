@@ -1,10 +1,12 @@
 // Prayer ecosystem: petitions, sick, thanksgiving, inventory, carriers, events.
+// "today" is Philippine Standard Time (UTC+8) - liturgy day in Cebu, not UTC.
 const express = require('express');
 const db = require('../models/db');
 const { requireAuth, requireParent } = require('../middleware/auth');
+const { phtToday } = require('../lib/pht');
 
 const router = express.Router();
-const today = () => new Date().toISOString().slice(0, 10);
+const today = () => phtToday();
 
 // PETITIONS
 router.get('/petitions', requireAuth, (req, res) => {
@@ -146,12 +148,113 @@ router.post('/thanksgiving', requireAuth, (req, res) => {
   return res.json({ id: r.lastInsertRowid });
 });
 
-// INVENTORY
+// INVENTORY (kept for backwards compat)
 router.get('/inventory', requireAuth, (req, res) => {
   const q = (req.query.q || '').toLowerCase();
   let rows = db.prepare(`SELECT * FROM prayer_inventory WHERE family_id = ? ORDER BY date_resolved DESC LIMIT 500`).all(req.user.family_id);
   if (q) rows = rows.filter(r => ((r.person_name || '') + ' ' + (r.original_intention || '') + ' ' + (r.how_god_answered || '')).toLowerCase().includes(q));
   return res.json({ inventory: rows });
+});
+
+// DELETE - allow remove of a petition (the adder OR a parent can delete).
+router.delete('/petition/:id', requireAuth, (req, res) => {
+  const id = Number(req.params.id);
+  const p = db.prepare('SELECT * FROM prayer_petitions WHERE id = ? AND family_id = ?').get(id, req.user.family_id);
+  if (!p) return res.status(404).json({ error: 'not found' });
+  const isParent = req.user.role === 'tatay' || req.user.role === 'nanay';
+  const owns = p.added_by_user_id === req.user.id;
+  if (!isParent && !owns) return res.status(403).json({ error: 'not allowed' });
+  db.prepare('DELETE FROM petition_carriers WHERE petition_id = ?').run(id);
+  db.prepare('DELETE FROM petition_events WHERE petition_id = ?').run(id);
+  db.prepare('DELETE FROM prayer_petitions WHERE id = ?').run(id);
+  return res.json({ ok: true });
+});
+
+router.delete('/sick/:id', requireAuth, (req, res) => {
+  const id = Number(req.params.id);
+  const s = db.prepare('SELECT * FROM prayer_sick WHERE id = ? AND family_id = ?').get(id, req.user.family_id);
+  if (!s) return res.status(404).json({ error: 'not found' });
+  const isParent = req.user.role === 'tatay' || req.user.role === 'nanay';
+  const owns = s.added_by_user_id === req.user.id;
+  if (!isParent && !owns) return res.status(403).json({ error: 'not allowed' });
+  db.prepare('DELETE FROM prayer_sick WHERE id = ?').run(id);
+  return res.json({ ok: true });
+});
+
+router.delete('/thanksgiving/:id', requireAuth, (req, res) => {
+  const id = Number(req.params.id);
+  const t = db.prepare('SELECT * FROM prayer_thanksgiving WHERE id = ? AND family_id = ?').get(id, req.user.family_id);
+  if (!t) return res.status(404).json({ error: 'not found' });
+  const isParent = req.user.role === 'tatay' || req.user.role === 'nanay';
+  const owns = t.added_by_user_id === req.user.id;
+  if (!isParent && !owns) return res.status(403).json({ error: 'not allowed' });
+  db.prepare('DELETE FROM prayer_thanksgiving WHERE id = ?').run(id);
+  return res.json({ ok: true });
+});
+
+router.delete('/world/:id', requireAuth, (req, res) => {
+  const id = Number(req.params.id);
+  const w = db.prepare('SELECT * FROM world_intentions WHERE id = ? AND family_id = ?').get(id, req.user.family_id);
+  if (!w) return res.status(404).json({ error: 'not found' });
+  const isParent = req.user.role === 'tatay' || req.user.role === 'nanay';
+  const owns = w.added_by_user_id === req.user.id;
+  if (!isParent && !owns) return res.status(403).json({ error: 'not allowed' });
+  db.prepare('DELETE FROM world_intentions WHERE id = ?').run(id);
+  return res.json({ ok: true });
+});
+
+// WORLD INTENTIONS - "the world we carry"
+// Intentions for events larger than the family: wars, calamities, the Church,
+// the Pope, public officials, peace, the unborn. Family-scoped, free-add by anyone.
+router.get('/world', requireAuth, (req, res) => {
+  const rows = db.prepare(`SELECT w.*, u.display_name AS added_by_name
+    FROM world_intentions w LEFT JOIN users u ON u.id = w.added_by_user_id
+    WHERE w.family_id = ? AND w.active = 1 ORDER BY w.created_at DESC`).all(req.user.family_id);
+  return res.json({ world: rows });
+});
+
+router.post('/world', requireAuth, (req, res) => {
+  const { title, detail, category } = req.body || {};
+  if (!title) return res.status(400).json({ error: 'title required' });
+  const cat = ['world', 'peace', 'church', 'leaders', 'calamity', 'unborn', 'other'].includes(category) ? category : 'world';
+  const r = db.prepare('INSERT INTO world_intentions (family_id,added_by_user_id,title,detail,category) VALUES (?,?,?,?,?)')
+    .run(req.user.family_id, req.user.id, title, detail || null, cat);
+  return res.json({ id: r.lastInsertRowid });
+});
+
+router.put('/world/:id', requireAuth, (req, res) => {
+  const id = Number(req.params.id);
+  const w = db.prepare('SELECT * FROM world_intentions WHERE id = ? AND family_id = ?').get(id, req.user.family_id);
+  if (!w) return res.status(404).json({ error: 'not found' });
+  const isParent = req.user.role === 'tatay' || req.user.role === 'nanay';
+  const owns = w.added_by_user_id === req.user.id;
+  if (!isParent && !owns) return res.status(403).json({ error: 'not allowed' });
+  const allow = ['title', 'detail', 'category', 'active'];
+  const updates = [], values = [];
+  for (const f of allow) {
+    if (req.body && Object.prototype.hasOwnProperty.call(req.body, f)) {
+      updates.push(f + ' = ?'); values.push(req.body[f]);
+    }
+  }
+  if (!updates.length) return res.status(400).json({ error: 'nothing to update' });
+  values.push(id);
+  db.prepare('UPDATE world_intentions SET ' + updates.join(', ') + ' WHERE id = ?').run(...values);
+  return res.json({ ok: true });
+});
+
+// ANSWERED - thanksgivings + answered petitions merged, reverse chronological.
+// This is "What He Has Done" in The Book: testimony, in one stream.
+router.get('/answered', requireAuth, (req, res) => {
+  const q = (req.query.q || '').toLowerCase();
+  const fam = req.user.family_id;
+
+  const thx = db.prepare(`SELECT id, person_name, thanksgiving_text AS text, date_added AS at, 'thanksgiving' AS kind FROM prayer_thanksgiving WHERE family_id = ? ORDER BY date_added DESC LIMIT 200`).all(fam);
+  const inv = db.prepare(`SELECT id, person_name, COALESCE(how_god_answered, original_intention) AS text, date_resolved AS at, source_type AS kind, original_intention FROM prayer_inventory WHERE family_id = ? AND date_resolved IS NOT NULL ORDER BY date_resolved DESC LIMIT 200`).all(fam);
+
+  let rows = thx.concat(inv).filter(r => r.at);
+  rows.sort((a, b) => String(b.at).localeCompare(String(a.at)));
+  if (q) rows = rows.filter(r => ((r.person_name || '') + ' ' + (r.text || '') + ' ' + (r.original_intention || '')).toLowerCase().includes(q));
+  return res.json({ answered: rows.slice(0, 200) });
 });
 
 module.exports = router;

@@ -1,4 +1,4 @@
-/* Heavenward - main styles. Catholic family companion. */
+﻿/* Heavenward - main styles. Catholic family companion. */
 :root {
   --navy:  #1A1A2E;
   --gold:  #C9A84C;
@@ -50,6 +50,17 @@ a  { color: var(--rose); text-decoration: none; }
   padding: .25rem 0 1rem;
 }
 .brand { font-family: var(--font-serif); font-weight: 600; color: var(--navy); font-size: 1.25rem; letter-spacing: .02em; }
+.build-chip {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .65rem; font-weight: 600;
+  background: var(--gold, #C9A84C); color: var(--navy, #1A1A2E);
+  padding: .12rem .42rem; border-radius: 6px;
+  margin-left: .4rem; vertical-align: middle; cursor: pointer;
+  letter-spacing: .04em;
+  user-select: none;
+}
+.build-chip:hover { background: #d8b860; }
+.build-chip:active { transform: scale(.94); }
 .who { color: var(--muted); font-size: .95rem; }
 .who #who-name { color: var(--navy); font-weight: 500; }
 
@@ -135,7 +146,7 @@ fieldset legend { padding: 0 .35rem; color: var(--navy); font-family: var(--font
 /* BOTTOM NAV */
 .bottom-nav {
   position: fixed; left: 0; right: 0; bottom: 0;
-  display: grid; grid-template-columns: repeat(6, 1fr);
+  display: grid; grid-template-columns: repeat(5, 1fr);
   background: #fff;
   border-top: 1px solid #e8dfc6;
   box-shadow: 0 -1px 8px rgba(0,0,0,.04);

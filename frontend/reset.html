@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heavenward - reset</title>
+<style>
+  body { font-family: Georgia, serif; background: #fffdf6; color: #1A1A2E; margin: 0; padding: 2rem; text-align: center; }
+  h1 { font-size: 1.4rem; margin: 1rem 0 .5rem; }
+  p  { color: #4a4a66; margin: .5rem 0; }
+  .status { background: #fff8e3; border: 1px solid #C9A84C; border-radius: 10px; padding: 1rem; margin: 1.5rem auto; max-width: 360px; }
+  .ok    { color: #557A4B; }
+  .doing { color: #C9A84C; }
+  .err   { color: #B33A3A; }
+  ul { list-style: none; padding: 0; text-align: left; max-width: 360px; margin: 0 auto; }
+  li { padding: .35rem 0; border-bottom: 1px dashed #C9A84C44; }
+  a.btn { display: inline-block; margin-top: 1rem; padding: .7rem 1.2rem; background: #C9A84C; color: #1A1A2E; border-radius: 8px; text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+  <h1>Heavenward - fresh start</h1>
+  <p>This unregisters the old service worker, deletes every cache this app has stored, and loads Heavenward clean.</p>
+  <div class="status">
+    <ul id="log"></ul>
+    <p id="msg" class="doing">Working...</p>
+  </div>
+  <a class="btn" id="go" href="/?fresh=now" style="display:none">Open Heavenward</a>
+
+<script>
+  var log = document.getElementById('log');
+  var msg = document.getElementById('msg');
+  var go  = document.getElementById('go');
+  function add(text, cls) {
+    var li = document.createElement('li');
+    li.textContent = text;
+    if (cls) li.className = cls;
+    log.appendChild(li);
+  }
+  (async function () {
+    try {
+      // 1. Unregister every service worker registered for this origin.
+      if ('serviceWorker' in navigator) {
+        var regs = await navigator.serviceWorker.getRegistrations();
+        if (regs.length === 0) add('No service workers were registered.', 'ok');
+        for (var i = 0; i < regs.length; i++) {
+          await regs[i].unregister();
+          add('Unregistered SW: ' + (regs[i].scope || '(default)'), 'ok');
+        }
+      } else { add('Browser has no service workers.', 'ok'); }
+      // 2. Delete every cache (caches API stores SW-cached responses).
+      if ('caches' in window) {
+        var keys = await caches.keys();
+        if (keys.length === 0) add('No caches to delete.', 'ok');
+        for (var j = 0; j < keys.length; j++) {
+          await caches.delete(keys[j]);
+          add('Deleted cache: ' + keys[j], 'ok');
+        }
+      }
+      // 3. Clear localStorage too - in case anything stale persisted there.
+      try { localStorage.clear(); add('Cleared local storage.', 'ok'); } catch (e) {}
+      msg.textContent = 'Done. Tap below to open Heavenward clean.';
+      msg.className = 'ok';
+      go.style.display = 'inline-block';
+      // Auto-redirect after 2s so this also works hands-free.
+      setTimeout(function () { window.location.href = '/?fresh=' + Date.now(); }, 2000);
+    } catch (e) {
+      add('Error: ' + (e && e.message), 'err');
+      msg.textContent = 'Something failed. Tap below anyway.';
+      msg.className = 'err';
+      go.style.display = 'inline-block';
+    }
+  })();
+</script>
+</body>
+</html>

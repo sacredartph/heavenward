@@ -1,28 +1,92 @@
 // Hours / Morning / Night / Saint-of-the-day routes.
+// All "today" lookups are in Philippine Standard Time (UTC+8). The server's
+// own timezone is irrelevant - liturgy and tallies always follow the user's
+// calendar day in Cebu.
 const express = require('express');
 const db = require('../models/db');
 const { requireAuth } = require('../middleware/auth');
+const { phtToday, phtTodayMMDD, phtYearDay, PHT_OFFSET_MS } = require('../lib/pht');
 
 const router = express.Router();
-const today = () => new Date().toISOString().slice(0, 10);
-const mmdd = () => today().slice(5);
+const today = () => phtToday();
+const mmdd = () => phtTodayMMDD();
+
+// Common-of-saints fallback: when the calendar has no Gospel ref, pick one keyed to
+// the saint's category so EVERY day has a Gospel + a family question (the design contract).
+const COMMON_BY_CATEGORY = {
+  martyr:     { ref: 'Matthew 10:28-33', question: 'What is something I will never give up, no matter what?' },
+  apostle:    { ref: 'Mark 16:15-20',    question: 'Jesus sent the apostles to all the world. Where am I sent today?' },
+  doctor:     { ref: 'Matthew 13:51-52', question: 'What did I learn about God this week that I want to remember?' },
+  religious:  { ref: 'Matthew 19:27-29', question: 'What is one little thing I can give up today for love of Jesus?' },
+  marian:     { ref: 'Luke 1:46-55',     question: 'Mary sang of God\'s greatness. What in my life will I praise him for today?' },
+  married:    { ref: 'Matthew 19:3-6',   question: 'What can our family do today to love each other better?' },
+  pope:       { ref: 'John 21:15-17',    question: 'Feed my lambs - Jesus said to Peter. Whom can I feed today?' },
+  patriarch:  { ref: 'Matthew 1:18-24',  question: 'Like Joseph, where am I asked to listen quietly and obey?' },
+  evangelist: { ref: 'Mark 16:15-20',    question: 'What good news about Jesus can I share with my family today?' },
+  angel:      { ref: 'Matthew 18:10',    question: 'My guardian angel walks with me. Will I say hello today?' },
+  bishop:     { ref: 'John 10:11-16',    question: 'A good shepherd lays down his life. Whom am I shepherding?' },
+  lay_youth:  { ref: 'Matthew 19:13-15', question: 'Jesus called the children to him. What does he want to tell me today?' },
+  devotion:   { ref: 'John 15:9-12',     question: 'Remain in my love - Jesus said. Where am I letting his love in?' },
+  feast:      { ref: 'John 15:9-12',     question: 'Where am I being asked to love today, like Jesus loves me?' }
+};
+const SEASON_FALLBACK = {
+  advent:    { ref: 'Luke 21:34-36', question: 'Stay awake! What in my heart needs to wake up for Christmas?' },
+  christmas: { ref: 'John 1:14',     question: 'The Word became flesh. Where will I welcome him in this home today?' },
+  lent:      { ref: 'Matthew 6:1-6', question: 'Lent is for cleaning my heart. What needs cleaning today?' },
+  easter:    { ref: 'John 20:19-23', question: 'He is risen! What in me can rise again today?' },
+  ordinary:  { ref: 'Matthew 5:1-12', question: 'Which Beatitude feels most like me today?' }
+};
 
 router.get('/today', requireAuth, (req, res) => {
   const cal = db.prepare('SELECT * FROM liturgical_calendar WHERE date = ?').get(today());
   let saint = cal && cal.saint_slug ? db.prepare('SELECT * FROM saints WHERE slug = ?').get(cal.saint_slug) : null;
   if (!saint) saint = db.prepare('SELECT * FROM saints WHERE feast_day = ?').get(mmdd());
   if (!saint) {
-    // Stable fallback for the day: choose by day-of-year so it does not jump every reload.
     const all = db.prepare('SELECT * FROM saints ORDER BY name').all();
     if (all.length) {
-      const dayNum = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-      saint = all[dayNum % all.length];
+      saint = all[phtYearDay() % all.length];
     }
   }
-  const hours = db.prepare('SELECT hour_type, COUNT(*) c FROM hours_log WHERE user_id = ? AND date(logged_at) = date(\'now\') GROUP BY hour_type').all(req.user.id);
+  let headline = null, kind = 'ordinary';
+  if (cal && cal.feast_name && (cal.feast_rank === 'solemnity' || cal.feast_rank === 'feast')) {
+    headline = cal.feast_name;
+    kind = cal.feast_rank;
+  } else if (saint) {
+    headline = 'Memorial of ' + saint.name;
+    kind = 'memorial';
+  } else if (cal) {
+    headline = (cal.season ? cal.season.charAt(0).toUpperCase() + cal.season.slice(1) : 'Ordinary') + ' Time';
+    kind = 'season';
+  }
+  // Gospel fallback: lectionary -> common of saints by category -> seasonal beatitude.
+  let gospel_ref = cal && cal.gospel_ref;
+  let gospel_question = cal && cal.gospel_question;
+  let gospel_source = (cal && cal.gospel_ref) ? 'lectionary' : null;
+  if (!gospel_ref && saint && COMMON_BY_CATEGORY[saint.category]) {
+    const c = COMMON_BY_CATEGORY[saint.category];
+    gospel_ref = c.ref; gospel_question = c.question; gospel_source = 'common-of-saints';
+  }
+  if (!gospel_ref) {
+    const seasonKey = (cal && cal.season) || 'ordinary';
+    const s = SEASON_FALLBACK[seasonKey] || SEASON_FALLBACK.ordinary;
+    gospel_ref = s.ref; gospel_question = s.question; gospel_source = 'season';
+  }
+  const liturgical = Object.assign({}, cal || { season: 'ordinary' }, { gospel_ref, gospel_question, gospel_source });
+
+  const hours = db.prepare("SELECT hour_type, COUNT(*) c, MAX(logged_at) last FROM hours_log WHERE user_id = ? AND date(logged_at,'+8 hours') = date('now','+8 hours') GROUP BY hour_type").all(req.user.id);
   const done = {};
-  for (const h of hours) done[h.hour_type] = h.c;
-  return res.json({ liturgical: cal, saint, done });
+  for (const h of hours) done[h.hour_type] = { count: h.c, last: h.last };
+
+  // Today's contribution at the family level (the candles lit, names carried, etc.)
+  const candlesToday = db.prepare("SELECT COUNT(*) c FROM hearth_candles WHERE family_id = ? AND date(lit_at,'+8 hours') = date('now','+8 hours')").get(req.user.family_id).c;
+  const rosariesToday = db.prepare("SELECT COUNT(*) c, COALESCE(SUM(steps),0) steps FROM rosary_walks WHERE family_id = ? AND date(started_at,'+8 hours') = date('now','+8 hours') AND ended_at IS NOT NULL").get(req.user.family_id);
+  const contribution = {
+    candles_lit_today: candlesToday,
+    rosaries_today: rosariesToday.c,
+    steps_today: rosariesToday.steps
+  };
+
+  return res.json({ liturgical, saint, done, headline, kind, contribution });
 });
 
 router.post('/log', requireAuth, (req, res) => {
@@ -37,7 +101,7 @@ router.post('/log', requireAuth, (req, res) => {
   if (u && u.last_activity_date === t) {
     // no change
   } else {
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const yesterday = phtToday(Date.now() - 86400000);
     streak = u && u.last_activity_date === yesterday ? streak + 1 : 1;
     db.prepare('UPDATE users SET streak_days = ?, last_activity_date = ? WHERE id = ?').run(streak, t, req.user.id);
   }

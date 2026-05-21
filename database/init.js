@@ -299,6 +299,85 @@ const schema = [
     lectionary_year TEXT,
     gospel_ref TEXT,
     gospel_question TEXT
+  )`,
+
+  // Family prayer schedule (one row per family).
+  // The "Heavenward Hours" - a Catholic family iteration of the Liturgy of the Hours.
+  `CREATE TABLE IF NOT EXISTS family_schedule (
+    family_id INTEGER PRIMARY KEY,
+    morning_time     TEXT DEFAULT '06:00',
+    midmorning_time  TEXT DEFAULT '09:00',
+    angelus_time     TEXT DEFAULT '12:00',
+    mercy_time       TEXT DEFAULT '15:00',
+    rosary_time      TEXT DEFAULT '18:00',
+    night_time       TEXT DEFAULT '21:00',
+    active INTEGER DEFAULT 1,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`,
+
+  // Web Push subscriptions: one row per (user, device) - the browser
+  // generates a different endpoint per install / per device.
+  `CREATE TABLE IF NOT EXISTS push_subscriptions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    family_id INTEGER NOT NULL,
+    endpoint TEXT NOT NULL UNIQUE,
+    p256dh TEXT NOT NULL,
+    auth TEXT NOT NULL,
+    user_agent TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_pushed_at DATETIME
+  )`,
+
+  // Idempotency log so the cron does not push twice for the same prayer minute.
+  `CREATE TABLE IF NOT EXISTS push_fired_log (
+    family_id INTEGER NOT NULL,
+    prayer_key TEXT NOT NULL,
+    fired_date TEXT NOT NULL,
+    fired_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (family_id, prayer_key, fired_date)
+  )`,
+
+  // "Our People" - the family's ongoing prayer circle (living people we pray for).
+  // The Repository of the Dead holds the deceased separately.
+  // category: family | friend | godfamily | parish | work | acquaintance | other
+  `CREATE TABLE IF NOT EXISTS prayer_people (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    family_id INTEGER NOT NULL,
+    added_by_user_id INTEGER NOT NULL,
+    full_name TEXT NOT NULL,
+    relationship TEXT,
+    category TEXT DEFAULT 'other',
+    notes TEXT,
+    active INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`,
+
+  // Letter-to-God diary. 99.9% private: only the author can read their own rows.
+  // No family/parent visibility. The 0.1% door (an Examen/Confession companion
+  // export) is left for a later release - the schema does not differ.
+  `CREATE TABLE IF NOT EXISTS diary_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    entry_date DATE NOT NULL,
+    verse_ref TEXT,
+    verse_text TEXT,
+    prompt TEXT,
+    body TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`,
+
+  // The world we carry - intentions for events, wars, calamities, the Church at large.
+  // Family-scoped, like petitions, but rendered as its own cycling section in The Book.
+  `CREATE TABLE IF NOT EXISTS world_intentions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    family_id INTEGER NOT NULL,
+    added_by_user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    detail TEXT,
+    category TEXT DEFAULT 'world',
+    active INTEGER DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`
 ];
 
@@ -323,6 +402,25 @@ const tx = db.transaction(() => {
   for (const stmt of idx) db.prepare(stmt).run();
 });
 tx();
+
+// Idempotent column migrations (SQLite ALTER TABLE only supports add-column;
+// we add new family_schedule columns here if they don't yet exist).
+function hasColumn(table, col) {
+  const rows = db.prepare(`PRAGMA table_info(${table})`).all();
+  return rows.some(r => r.name === col);
+}
+if (!hasColumn('family_schedule', 'midmorning_time')) {
+  db.prepare(`ALTER TABLE family_schedule ADD COLUMN midmorning_time TEXT DEFAULT '09:00'`).run();
+  console.log('migrated: family_schedule.midmorning_time');
+}
+if (!hasColumn('family_schedule', 'mercy_time')) {
+  db.prepare(`ALTER TABLE family_schedule ADD COLUMN mercy_time TEXT DEFAULT '15:00'`).run();
+  console.log('migrated: family_schedule.mercy_time');
+}
+
+// Diary + world-intentions indexes (added 2026-05-17 PHT).
+db.prepare('CREATE INDEX IF NOT EXISTS idx_diary_user_date ON diary_entries(user_id, entry_date DESC)').run();
+db.prepare('CREATE INDEX IF NOT EXISTS idx_world_family ON world_intentions(family_id, active)').run();
 
 console.log('Schema ready: ' + schema.length + ' tables, ' + idx.length + ' indexes.');
 db.close();

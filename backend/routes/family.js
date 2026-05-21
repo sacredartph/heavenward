@@ -48,4 +48,40 @@ router.post('/milestone', requireParent, (req, res) => {
   return res.json({ id: r.lastInsertRowid });
 });
 
+// Family prayer schedule
+router.get('/schedule', requireAuth, (req, res) => {
+  let s = db.prepare('SELECT * FROM family_schedule WHERE family_id = ?').get(req.user.family_id);
+  if (!s) {
+    db.prepare('INSERT INTO family_schedule (family_id) VALUES (?)').run(req.user.family_id);
+    s = db.prepare('SELECT * FROM family_schedule WHERE family_id = ?').get(req.user.family_id);
+  }
+  return res.json({ schedule: s });
+});
+
+router.put('/schedule', requireParent, (req, res) => {
+  const exists = db.prepare('SELECT family_id FROM family_schedule WHERE family_id = ?').get(req.user.family_id);
+  if (!exists) db.prepare('INSERT INTO family_schedule (family_id) VALUES (?)').run(req.user.family_id);
+  const allow = ['morning_time', 'midmorning_time', 'angelus_time', 'mercy_time', 'rosary_time', 'night_time', 'active'];
+  const isTime = (v) => typeof v === 'string' && /^\d{2}:\d{2}$/.test(v);
+  const updates = [];
+  const values = [];
+  for (const f of allow) {
+    if (req.body && Object.prototype.hasOwnProperty.call(req.body, f)) {
+      if (f === 'active') {
+        updates.push(f + ' = ?'); values.push(req.body[f] ? 1 : 0);
+      } else if (isTime(req.body[f])) {
+        updates.push(f + ' = ?'); values.push(req.body[f]);
+      } else {
+        return res.status(400).json({ error: f + ' must be HH:MM' });
+      }
+    }
+  }
+  if (!updates.length) return res.status(400).json({ error: 'nothing to update' });
+  updates.push('updated_at = CURRENT_TIMESTAMP');
+  values.push(req.user.family_id);
+  db.prepare('UPDATE family_schedule SET ' + updates.join(', ') + ' WHERE family_id = ?').run(...values);
+  const s = db.prepare('SELECT * FROM family_schedule WHERE family_id = ?').get(req.user.family_id);
+  return res.json({ schedule: s });
+});
+
 module.exports = router;

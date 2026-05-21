@@ -42,14 +42,114 @@
 /* HOME */
 .home-greeting { padding: .5rem 0 .25rem; }
 .home-greeting h2 { color: var(--navy); }
+.home-next-prayer {
+  background: linear-gradient(180deg, var(--navy), #2a2a44);
+  color: var(--cream);
+  border-left: 3px solid var(--gold);
+}
+.home-next-prayer h4 { color: var(--gold); margin: 0 0 .25rem; font-family: var(--font-serif); }
+.home-next-prayer p { color: #c9a84c; margin: 0; }
+
+.prayer-banner {
+  position: fixed; left: 0; right: 0; bottom: 4.5rem;
+  z-index: 950;
+  display: flex; justify-content: center;
+  padding: 0 .75rem;
+  pointer-events: none;
+}
+.prayer-banner.hidden { display: none; }
+.prayer-banner-inner {
+  background: var(--navy);
+  color: var(--cream);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  padding: .85rem 1rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,.35);
+  display: grid;
+  grid-template-columns: 28px 1fr auto auto;
+  gap: .75rem;
+  align-items: center;
+  max-width: 560px;
+  width: 100%;
+  pointer-events: auto;
+}
+.prayer-banner-text strong { color: var(--gold); font-family: var(--font-serif); }
+.prayer-banner-text p { margin: 0; color: #d6cdb6; }
+.prayer-banner button.primary { width: auto; min-width: 88px; margin: 0; }
+.prayer-banner button.link { color: var(--gold); }
 .home-saint {
   border-left: 3px solid var(--gold);
-  background: #fffdf6;
+  background: linear-gradient(180deg, #fffdf6 0%, #fff 100%);
 }
-.home-saint h4 { margin: 0 0 .35rem; color: var(--navy); }
-.home-saint p.quote { font-style: italic; color: var(--gold); font-family: var(--font-serif); }
+.today-headline { display: flex; align-items: center; gap: .55rem; margin-bottom: .4rem; }
+.today-headline h3 { margin: 0; color: var(--navy); font-size: 1.2rem; }
+.today-headline h3.saint-link { cursor: pointer; text-decoration: underline; text-decoration-color: rgba(201,168,76,.4); text-underline-offset: 3px; }
+.today-headline h3.saint-link:hover { text-decoration-color: var(--gold); }
+.rank-badge {
+  font-size: .65rem; text-transform: uppercase; letter-spacing: .1em;
+  padding: .15rem .55rem; border-radius: 999px;
+  font-family: var(--font-sans); font-weight: 600;
+}
+.rank-badge.rank-solemnity { background: var(--gold); color: var(--navy); }
+.rank-badge.rank-feast     { background: #c98a4c; color: #fff; }
+.rank-badge.rank-memorial  { background: #e8dfc6; color: var(--navy); }
+.today-brief { font-family: var(--font-serif); color: var(--navy); margin: .3rem 0 .6rem; line-height: 1.55; }
+.today-quote { font-style: italic; color: var(--gold); font-family: var(--font-serif); padding-left: .75rem; border-left: 2px solid var(--gold); margin: .5rem 0; }
+.today-gospel {
+  background: #fff8e3;
+  border-radius: 10px;
+  padding: .65rem .85rem;
+  margin-top: .8rem;
+  border: 1px solid #e8dfc6;
+}
+.today-gospel strong { font-family: var(--font-serif); color: var(--navy); }
+.gospel-question { font-family: var(--font-serif); font-style: italic; color: #5a4f2a; margin: .35rem 0 0; }
 .home-prayer-cards { display: grid; grid-template-columns: 1fr; gap: .75rem; }
 @media (min-width: 720px) { .home-prayer-cards { grid-template-columns: repeat(3, 1fr); } }
+
+/* Pray Without Ceasing - the family's hours, 2x3 grid */
+.without-ceasing-card { background: linear-gradient(180deg, #fffdf6 0%, #fff 100%); border-left: 3px solid var(--gold); }
+.without-ceasing-header h3 { margin: 0; font-family: var(--font-serif); color: var(--navy); }
+.without-ceasing-header p { margin: 0 0 .85rem; }
+.hours-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .55rem;
+  margin: .5rem 0 .65rem;
+}
+@media (max-width: 540px) { .hours-grid { grid-template-columns: repeat(2, 1fr); } }
+.hour-card {
+  background: #fffdf6;
+  border: 1px solid #e8dfc6;
+  border-radius: 12px;
+  padding: .65rem .55rem;
+  min-height: 64px;
+  text-align: center;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .15rem;
+  transition: background .15s ease, border-color .15s ease, transform .1s ease;
+}
+.hour-card:hover { background: #fff8e3; }
+.hour-card.next-due {
+  border: 1.5px solid var(--gold);
+  background: linear-gradient(180deg, #fff8e3 0%, #fffdf6 100%);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, .15);
+}
+.hour-card.prayed { background: #f4ecd6; border-color: #d6c590; }
+.hour-card.prayed.next-due { background: linear-gradient(180deg, #fff8e3, #f4ecd6); }
+.hour-name { font-family: var(--font-serif); font-weight: 600; color: var(--navy); font-size: .95rem; }
+.hour-sub  { font-size: .78rem; }
+.hour-gift { color: var(--gold); font-style: italic; font-family: var(--font-serif); }
+
+/* Universal "italic gold call to action" - one line at the bottom of any card */
+.italic-cta { color: var(--gold); font-style: italic; font-family: var(--font-serif); margin: .5rem 0 0; line-height: 1.5; }
+.italic-cta em { color: var(--navy); font-style: italic; font-weight: 500; }
+.italic-cta a, .italic-cta .clickable { color: var(--gold); text-decoration: underline; text-decoration-color: rgba(201,168,76,.4); text-underline-offset: 3px; cursor: pointer; }
+.italic-cta a:hover, .italic-cta .clickable:hover { text-decoration-color: var(--gold); }
 .presence-row { display: flex; gap: .65rem; flex-wrap: wrap; padding-top: .5rem; }
 .presence-dot {
   display: inline-flex; flex-direction: column; align-items: center; gap: .25rem;
@@ -65,17 +165,1051 @@
 .presence-dot .label { font-size: .75rem; color: var(--muted); }
 .presence-dot .streak { font-size: .7rem; color: var(--gold); }
 
-.moment .moment-buttons {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; margin-top: .5rem;
+/* === STAINED-GLASS MOMENT PICKER === */
+.moment-picker { background: linear-gradient(180deg, #fffdf6, #fff); }
+.moment-picker.hidden { display: none; }
+.moment-picker h3 { margin: 0 0 .15rem; color: var(--navy); font-family: var(--font-serif); }
+.moment-picker p.muted { margin: 0 0 .9rem; }
+.moment-discs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .75rem;
+  padding: .25rem 0;
 }
-@media (min-width: 540px) { .moment .moment-buttons { grid-template-columns: repeat(5, 1fr); } }
-.moment .moment-buttons button {
-  background: #fffdf6;
-  border: 1px solid #e8dfc6;
-  color: var(--navy);
+@media (max-width: 380px) { .moment-discs { grid-template-columns: repeat(5, 1fr); gap: .4rem; } }
+.moment-disc {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+  min-height: auto;
+  transition: transform .15s ease;
+}
+.moment-disc:active { transform: scale(.92); }
+.moment-disc .disc-glass {
+  display: block;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%,
+    color-mix(in srgb, var(--disc-color) 60%, white 40%) 0%,
+    var(--disc-color) 55%,
+    color-mix(in srgb, var(--disc-color) 80%, black 20%) 100%);
+  box-shadow:
+    inset 0 -2px 4px rgba(0,0,0,.2),
+    inset 0 2px 3px rgba(255,255,255,.35),
+    0 1px 4px rgba(0,0,0,.15),
+    0 0 0 1px rgba(0,0,0,.06);
+  transition: box-shadow .15s ease, transform .15s ease;
+}
+.moment-disc:hover .disc-glass {
+  box-shadow:
+    inset 0 -2px 4px rgba(0,0,0,.2),
+    inset 0 2px 3px rgba(255,255,255,.4),
+    0 2px 8px rgba(0,0,0,.18),
+    0 0 0 2px color-mix(in srgb, var(--disc-color) 60%, transparent);
+}
+.moment-disc .disc-label {
+  font-size: .72rem;
   font-family: var(--font-serif);
+  color: var(--navy);
+  text-align: center;
+  line-height: 1.2;
 }
-.moment .moment-buttons button:hover { background: #fff8e3; }
+
+/* === COLLAPSED PILL === */
+.moment-pill {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .55rem .9rem .55rem .55rem;
+  background: #fff;
+  border: 1.5px solid var(--gold);
+  border-radius: 999px;
+  margin: .55rem 0;
+  width: 100%;
+  cursor: pointer;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--navy);
+  text-align: left;
+  min-height: 48px;
+  transition: transform .12s ease, box-shadow .15s ease;
+}
+.moment-pill.hidden { display: none; }
+.moment-pill:hover { box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.moment-pill:active { transform: scale(.99); }
+.moment-pill .pill-glass {
+  display: inline-block;
+  width: 36px; height: 36px; border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,.2), inset 0 2px 3px rgba(255,255,255,.35), 0 0 0 1px rgba(0,0,0,.06);
+}
+.moment-pill .pill-echo { font-size: 1.05rem; line-height: 1.3; }
+
+/* ====== SAINT PICKER (avatar chooser) ====== */
+.saint-picker.hidden { display: none; }
+.saint-picker {
+  position: fixed; inset: 0; z-index: 3000;
+  display: flex; align-items: stretch; justify-content: center;
+}
+.saint-picker-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(10, 10, 24, .65);
+  backdrop-filter: blur(3px);
+}
+.saint-picker-sheet {
+  position: relative;
+  background: var(--cream);
+  max-width: 720px; width: 100%;
+  margin: 2rem 1rem;
+  border-radius: 14px;
+  padding: 1.25rem 1rem 1rem;
+  display: flex; flex-direction: column;
+  max-height: calc(100vh - 4rem);
+  box-shadow: 0 12px 48px rgba(0,0,0,.4);
+}
+.saint-picker-head { flex-shrink: 0; padding-bottom: .75rem; border-bottom: 1px solid #e8dfc6; }
+.saint-picker-head h3 { margin: 0 0 .15rem; color: var(--navy); font-family: var(--font-serif); }
+.saint-picker-head p { margin: .15rem 0 .55rem; }
+.saint-picker-head input {
+  width: 100%; padding: .5rem .75rem; border-radius: 8px;
+  border: 1px solid #d6cdb6; background: #fffdf6; font: inherit;
+}
+.saint-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: .6rem;
+  padding: .85rem .25rem;
+  overflow-y: auto;
+  flex: 1;
+}
+.saint-tile {
+  background: #fff; border: 1.5px solid #e8dfc6;
+  border-radius: 10px;
+  padding: .75rem .35rem .55rem;
+  cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: .35rem;
+  text-align: center;
+  transition: transform .12s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.saint-tile:hover { border-color: var(--gold); box-shadow: 0 2px 12px rgba(201,168,76,.18); }
+.saint-tile:active { transform: scale(.96); }
+.saint-tile.current { border-color: var(--gold); background: #fff8e3; box-shadow: 0 0 0 2px rgba(201,168,76,.2); }
+.saint-tile-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff8e3 0%, #fffdf6 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+}
+.saint-tile-avatar svg { width: 60%; height: 60%; color: var(--gold); }
+.saint-tile-name { font-family: var(--font-serif); color: var(--navy); font-size: .82rem; line-height: 1.15; }
+.saint-tile-patron { font-size: .68rem; line-height: 1.2; }
+.saint-picker-foot { padding-top: .65rem; border-top: 1px solid #e8dfc6; text-align: center; }
+#saint-picker-close { width: auto; min-width: 120px; }
+
+/* "Me" affordance in presence row */
+.presence-dot.me .label { color: var(--gold); }
+.presence-dot.clickable-self { cursor: pointer; }
+.presence-dot.clickable-self:hover .hw-saint-avatar { box-shadow: 0 0 0 3px var(--gold), 0 0 0 5px rgba(0,0,0,.06) !important; }
+
+/* ====== WALK LAUNCH - three premium cards ====== */
+.walk-launch-subtitle { padding: 0 .25rem .8rem; text-align: center; }
+.walk-launch-cta { text-align: center; margin-top: 1rem; padding: 0 .5rem; }
+
+.walk-path-card {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #efe8d2;
+  border-radius: 16px;
+  padding: 1.1rem 1.1rem;
+  margin: .55rem 0;
+  width: 100%;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,.02), 0 6px 24px rgba(0,0,0,.04);
+  transition: transform .15s cubic-bezier(.2,.7,.3,1), box-shadow .25s ease, border-color .15s ease;
+  text-align: left;
+  font: inherit;
+}
+.walk-path-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(0,0,0,.02), 0 10px 30px rgba(201,168,76,.16);
+  border-color: var(--gold);
+}
+.walk-path-card:active { transform: scale(.99); }
+.walk-path-card.walk-path-rosary {
+  background: linear-gradient(180deg, #fffdf6 0%, #fff 100%);
+  border: 1.5px solid var(--gold);
+  box-shadow: 0 1px 0 rgba(0,0,0,.02), 0 12px 36px rgba(201,168,76,.20);
+}
+.wpc-glyph {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff8e3 0%, #fffdf6 100%);
+  border: 1px solid #efe8d2;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+}
+.wpc-glyph svg { width: 60%; height: 60%; color: var(--gold); }
+.walk-path-rosary .wpc-glyph { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,168,76,.12); }
+.wpc-body { min-width: 0; }
+.wpc-name { font-family: var(--font-serif); font-size: 1.15rem; color: var(--navy); font-weight: 600; line-height: 1.2; }
+.walk-path-rosary .wpc-name { font-size: 1.3rem; }
+.wpc-sub { font-family: var(--font-serif); color: var(--gold); font-style: italic; font-size: .92rem; margin-top: .15rem; }
+.wpc-meta { font-family: var(--font-sans); color: var(--muted); font-size: .8rem; margin-top: .35rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+.wpc-meta .dot { opacity: .55; }
+.wpc-chevron { color: var(--gold); font-size: 1.6rem; line-height: 1; padding-right: .15rem; opacity: .55; }
+
+/* ====== CAMINO PICKER ====== */
+.camino-pick-intro { padding: 0 .5rem .85rem; text-align: center; }
+.camino-pick-list { display: flex; flex-direction: column; gap: .5rem; padding: 0 .25rem; }
+.camino-pick-card {
+  display: grid; grid-template-columns: 44px 1fr; gap: .85rem; align-items: center;
+  background: #fff; border: 1px solid #efe8d2; border-radius: 14px;
+  padding: .85rem 1rem; cursor: pointer; text-align: left; font: inherit;
+  box-shadow: 0 4px 16px rgba(0,0,0,.04);
+  transition: transform .12s ease, border-color .15s ease, box-shadow .25s ease;
+}
+.camino-pick-card:hover { border-color: var(--gold); box-shadow: 0 6px 22px rgba(201,168,76,.18); }
+.camino-pick-card:active { transform: scale(.98); }
+.cpc-letter {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(180deg, #fff8e3, #fffdf6);
+  border: 1px solid #efe8d2;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); color: var(--gold); font-size: 1.2rem; font-weight: 600;
+}
+.cpc-name { font-family: var(--font-serif); color: var(--navy); font-weight: 600; }
+
+/* The Holy Father intention - always at the top, marked as the universal
+   Catholic daily intention. Warmer background and a gold border to set it
+   apart from the rotating personal-circle cards below it. */
+.camino-pick-card-fixed {
+  background: linear-gradient(180deg, #fff8e3 0%, #fffdf6 100%);
+  border-color: var(--gold);
+  box-shadow: 0 4px 18px rgba(201,168,76,.18);
+}
+.camino-pick-card-fixed .cpc-letter {
+  background: linear-gradient(180deg, #C9A84C, #b89542);
+  color: #fffdf6;
+  border-color: var(--gold);
+}
+.camino-pick-card-fixed::after {
+  content: 'always available';
+  position: absolute; right: .75rem; top: .5rem;
+  font-family: 'Cinzel', var(--font-serif); font-size: .55rem;
+  letter-spacing: .12em; color: var(--gold); opacity: .7;
+  text-transform: uppercase;
+}
+.camino-pick-card-fixed { position: relative; }
+
+/* ====== PILGRIM PATH ====== */
+.screen-pilgrim { background: linear-gradient(180deg, #fffdf6 0%, #fff8e3 60%, #fffdf6 100%); }
+.pilgrim-stage { max-width: 420px; margin: 0 auto; padding: 1rem .5rem 2rem; text-align: center; }
+.pilgrim-title { font-family: var(--font-serif); color: var(--navy); font-size: 1.4rem; margin-bottom: .15rem; }
+.pilgrim-sub { padding: 0 1rem .5rem; }
+.pilgrim-svg {
+  width: 100%; max-width: 360px; height: auto;
+  margin: .5rem auto 1rem;
+  display: block;
+  filter: drop-shadow(0 4px 18px rgba(201,168,76,.18));
+}
+#pilgrim-path-fill { transition: stroke-dashoffset 1.2s cubic-bezier(.2,.7,.3,1); }
+#pilgrim-figure circle, #pilgrim-companion circle { transition: opacity .3s ease; }
+#pilgrim-figure { transition: transform 1s cubic-bezier(.2,.7,.3,1); }
+#pilgrim-companion { transition: transform 1s cubic-bezier(.2,.7,.3,1); }
+.pilgrim-destination-glow { animation: pilgrim-pulse 3.2s ease-in-out infinite; transform-origin: 120px 40px; transform-box: fill-box; }
+@keyframes pilgrim-pulse {
+  0%,100% { opacity: .55; transform: scale(1); }
+  50%     { opacity: .85; transform: scale(1.08); }
+}
+.pilgrim-meta {
+  text-align: center; font-family: var(--font-serif); color: var(--navy); font-size: 1.05rem; margin-top: .25rem;
+}
+.pilgrim-meta .muted { color: var(--muted); }
+.pilgrim-quote {
+  font-family: var(--font-serif); font-style: italic; color: var(--gold);
+  text-align: center;
+  margin: 1.25rem auto 0;
+  padding: 1.1rem 1.5rem;
+  max-width: 420px;
+  background: linear-gradient(180deg, #fffefb 0%, #fff8e3 100%);
+  border-radius: 14px;
+  border: 1px solid rgba(201,168,76,.4);
+  transition: opacity .45s ease;
+  min-height: 3em;
+  font-size: 1.2rem;
+  line-height: 1.55;
+  box-shadow: 0 4px 18px rgba(201,168,76,.12);
+}
+.pilgrim-quote.hidden { display: none; }
+.pilgrim-controls { text-align: center; margin-top: 1rem; }
+.pilgrim-controls .ghost.small { color: var(--muted); border-color: #e8dfc6; }
+
+/* Pilgrim completion */
+.screen-pilgrim-complete { background: linear-gradient(180deg, #fffdf6 0%, #fff8e3 100%); }
+.pilgrim-complete { max-width: 420px; margin: 0 auto; padding: 3rem 1rem 2rem; text-align: center; }
+.pilgrim-complete-flame { display: flex; justify-content: center; margin-bottom: 1.5rem; }
+.pilgrim-complete h2 { font-family: var(--font-serif); color: var(--navy); font-size: 1.4rem; line-height: 1.4; }
+.pilgrim-complete p { font-family: var(--font-serif); font-style: italic; color: var(--gold); font-size: 1.05rem; }
+.pilgrim-complete .primary { max-width: 220px; margin: 2rem auto 0; }
+
+/* ====== THE BOOK ====== */
+.screen-thebook { background: linear-gradient(180deg, #fffdf6 0%, var(--cream) 100%); }
+.thebook-subtitle { padding: 0 .25rem .5rem; }
+.thebook-subtitle p { margin: .15rem 0; }
+
+.book-section {
+  background: #fffefb;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(201,168,76,.025) 0%, transparent 35%),
+    radial-gradient(circle at 80% 70%, rgba(139,46,74,.018) 0%, transparent 40%);
+  border-radius: 16px;
+  padding: 1.25rem 1.1rem 1.1rem;
+  margin: 1rem 0;
+  box-shadow: 0 1px 0 rgba(0,0,0,.02), 0 8px 28px rgba(0,0,0,.05);
+  border-left: none;
+  position: relative;
+  overflow: hidden;
+}
+.book-section::before {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, var(--gold) 0%, rgba(201,168,76,.2) 100%);
+}
+.book-section.book-emergencies { background: linear-gradient(180deg, #fff5f5 0%, #fff 100%); border-left-color: var(--rose); }
+.book-section.hidden { display: none; }
+
+.book-section-head { display: flex; align-items: center; gap: .85rem; margin-bottom: .5rem; }
+.book-section-titles { flex: 1; min-width: 0; }
+.book-section-titles h3 { margin: 0; color: var(--navy); font-family: var(--font-serif); font-size: 1.15rem; }
+.book-section-rule { margin-top: .25rem; height: 2px; background: linear-gradient(90deg, var(--gold) 0%, rgba(201,168,76,0) 60%); }
+
+/* Illuminated initial - large drop-cap, manuscript style. */
+.illumi {
+  flex-shrink: 0;
+  width: 60px; height: 60px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fffdf2 0%, #f4ecd6 100%);
+  border: 1.5px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold);
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,.7),
+    inset 0 -2px 4px rgba(201,168,76,.15),
+    0 2px 6px rgba(0,0,0,.05);
+  position: relative;
+}
+.illumi::before {
+  content: '';
+  position: absolute; inset: 4px;
+  border: 1px solid rgba(201,168,76,.35);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.illumi-letter, .illumi svg { width: 60%; height: 60%; color: var(--gold); }
+.book-emergencies .illumi { border-color: var(--rose); }
+.book-emergencies .illumi svg { color: var(--rose); }
+
+.book-item {
+  padding: .65rem .25rem;
+  border-bottom: 1px dashed #f0e8d0;
+}
+.book-item:last-of-type { border-bottom: none; }
+.book-item strong { color: var(--navy); font-family: var(--font-serif); }
+.book-item p { margin: .15rem 0 .25rem; color: #3a3a4e; }
+.book-item .muted { color: var(--muted); }
+.book-item-actions { display: flex; gap: .85rem; margin-top: .3rem; }
+.book-item-actions .link { color: var(--gold); background: none; border: none; padding: 0; cursor: pointer; font-size: .85rem; }
+.book-item-actions .link:hover { color: var(--rose); }
+
+.book-item-emergency { border-left: 3px solid var(--rose); padding-left: .55rem; }
+.book-item-emergency .level.l1 { background: var(--rose); color: #fff; }
+
+.book-cta { margin: .5rem 0 .25rem; }
+.book-add { margin-top: .6rem; background: #fffdf6; }
+
+.book-search {
+  width: 100%;
+  padding: .55rem .75rem;
+  border-radius: 8px;
+  border: 1px solid #d6cdb6;
+  background: #fffdf6;
+  font: inherit;
+  margin-bottom: .4rem;
+}
+
+/* ====== CYCLING LITANY (cards that show one name+prayer at a time) ====== */
+.book-cycle {
+  background: linear-gradient(180deg, #fffdf2 0%, #fff8e3 60%, #fffdf2 100%);
+  border: 1px solid rgba(201,168,76,.35);
+  border-radius: 12px;
+  padding: .55rem .9rem .4rem;
+  margin: .4rem 0 .3rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 1px 0 rgba(0,0,0,.02), 0 3px 10px rgba(201,168,76,.06);
+  cursor: pointer;
+  overflow: hidden;
+  transition: box-shadow .3s ease;
+}
+.book-cycle:hover { box-shadow: 0 1px 0 rgba(0,0,0,.02), 0 5px 16px rgba(201,168,76,.12); }
+.book-cycle.paused { background: linear-gradient(180deg, #fff8e3 0%, #fff 100%); border-color: var(--gold); }
+.cycle-stage { transition: opacity .35s ease; }
+.cycle-name {
+  font-family: var(--font-serif);
+  color: var(--navy);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: .005em;
+}
+.cycle-sub { margin-top: .08rem; font-style: italic; font-size: .76rem; line-height: 1.15; }
+.cycle-prayer {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--gold);
+  font-size: .85rem;
+  line-height: 1.25;
+  margin: .35rem auto 0;
+  max-width: 26rem;
+  padding: 0 .35rem;
+}
+.cycle-actions {
+  display: flex; justify-content: center; gap: .4rem;
+  margin-top: 0; max-height: 0; overflow: hidden;
+  opacity: 0; pointer-events: none;
+  transition: max-height .3s ease, margin-top .3s ease, opacity .3s ease;
+}
+.book-cycle.paused .cycle-actions { max-height: 60px; margin-top: .35rem; }
+.book-cycle.paused .cycle-actions { opacity: 1; pointer-events: auto; }
+.cycle-btn {
+  background: #fff; border: 1px solid var(--gold); border-radius: 999px;
+  padding: .2rem .6rem .2rem .4rem;
+  display: inline-flex; align-items: center; gap: .25rem;
+  cursor: pointer; font: inherit;
+  color: var(--navy);
+  transition: transform .12s ease, background .15s ease;
+  min-height: 26px;
+}
+.cycle-btn:hover { background: var(--gold); color: var(--navy); }
+.cycle-btn svg { width: 14px; height: 14px; color: var(--gold); }
+.cycle-btn:hover svg { color: var(--navy); }
+.cycle-btn:active { transform: scale(.94); }
+.cycle-btn-label { font-family: var(--font-serif); font-size: .75rem; }
+.cycle-meta {
+  display: flex; justify-content: center; align-items: center; gap: .4rem;
+  margin-top: .15rem;
+  font-size: .62rem; color: var(--muted); font-family: var(--font-sans);
+  line-height: 1;
+}
+.cycle-pause {
+  background: transparent; border: none;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: .65rem;
+  letter-spacing: 1px;
+  padding: 0;
+}
+.cycle-pause:hover { color: var(--gold); }
+.book-cycle.paused .cycle-pause::after { content: '⏵'; }
+.cycle-pos { font-variant-numeric: tabular-nums; }
+
+/* ====== LUMINOUS HALO - premium multi-layer ======
+   .hw-saint-wrap  - the box that the avatar lives in (sized in JS)
+   .halo-shimmer   - rotating conic-gradient ring (gold + optional moment color)
+   .halo-glow      - soft radial bloom that hides behind the avatar
+   .hw-saint-avatar - the circle with the glyph
+   Active state adds animation; otherwise the halo is still and elegant.
+*/
+.hw-saint-wrap {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  isolation: isolate;
+}
+.hw-saint-wrap .hw-saint-avatar {
+  position: relative; z-index: 3;
+  width: 100%; height: 100%;
+  box-shadow: 0 1px 3px rgba(0,0,0,.10);
+}
+.hw-saint-wrap .halo-glow {
+  position: absolute; inset: -22%;
+  border-radius: 50%;
+  z-index: 1;
+  background: radial-gradient(circle at center,
+    rgba(255,215,120,.55) 0%,
+    rgba(201,168,76,.28) 35%,
+    rgba(201,168,76,.08) 60%,
+    rgba(201,168,76,0)   80%);
+  filter: blur(6px);
+  opacity: .85;
+  pointer-events: none;
+}
+.hw-saint-wrap .halo-shimmer {
+  position: absolute; inset: -10%;
+  border-radius: 50%;
+  z-index: 2;
+  background: conic-gradient(from 0deg,
+    rgba(255,215,120,.95) 0%,
+    rgba(201,168,76,.50) 22%,
+    rgba(255,248,192,.90) 45%,
+    rgba(201,168,76,.35) 68%,
+    rgba(255,215,120,.95) 100%);
+  mask:           radial-gradient(circle, transparent 58%, #000 60%, #000 76%, transparent 78%);
+  -webkit-mask:   radial-gradient(circle, transparent 58%, #000 60%, #000 76%, transparent 78%);
+  opacity: .80;
+  pointer-events: none;
+}
+/* When the member has a moment color, mix the moment color into the shimmer + glow. */
+.hw-saint-wrap.has-moment .halo-shimmer {
+  background: conic-gradient(from 0deg,
+    var(--halo-color)        0%,
+    rgba(255,215,120,.90)   25%,
+    var(--halo-color-soft)  50%,
+    rgba(255,248,192,.90)   75%,
+    var(--halo-color)      100%);
+  opacity: .90;
+}
+.hw-saint-wrap.has-moment .halo-glow {
+  background: radial-gradient(circle at center,
+    var(--halo-color-soft) 0%,
+    var(--halo-color-faint) 40%,
+    rgba(201,168,76,.10)   60%,
+    rgba(201,168,76,0)     80%);
+}
+/* Active = currently praying. Halo breathes + shimmer slowly rotates. */
+.hw-saint-wrap.is-active .halo-shimmer { animation: halo-spin 8s linear infinite, halo-bloom 2.4s ease-in-out infinite; }
+.hw-saint-wrap.is-active .halo-glow    { animation: halo-breath 2.4s ease-in-out infinite; }
+.hw-saint-wrap.is-active .hw-saint-avatar { animation: halo-rise 2.4s ease-in-out infinite; }
+@keyframes halo-spin   { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes halo-bloom  {
+  0%, 100% { opacity: .80; filter: blur(0); }
+  50%      { opacity: 1.0; filter: blur(.5px); }
+}
+@keyframes halo-breath {
+  0%, 100% { opacity: .70; transform: scale(1);   }
+  50%      { opacity: 1.0; transform: scale(1.12); }
+}
+@keyframes halo-rise {
+  0%, 100% { transform: scale(1); box-shadow: 0 1px 3px rgba(0,0,0,.10); }
+  50%      { transform: scale(1.03); box-shadow: 0 2px 10px rgba(201,168,76,.45); }
+}
+
+/* ====== WHISPER v17 - interior life screen ====== */
+.screen-whisper-v17 { padding-bottom: 6rem; }
+.whisper-tag { text-align: center; margin: .25rem 0 1rem; }
+.whisper-card { margin-bottom: 1rem; }
+.whisper-card-head { margin-bottom: .5rem; }
+.whisper-card-head h3 { margin: 0; font-family: var(--font-serif); color: var(--navy); }
+.whisper-card-head .muted { margin: .15rem 0 0; }
+
+/* 1. You are carried */
+.whisper-carried { background: linear-gradient(180deg, #fffdf6 0%, #fff8e3 100%); border-left: 3px solid var(--gold); }
+.carried-list { display: flex; flex-direction: column; gap: .6rem; }
+.carried-row { display: flex; align-items: flex-start; gap: .75rem; padding: .5rem .25rem; border-bottom: 1px dashed rgba(201,168,76,.18); }
+.carried-row:last-child { border-bottom: none; }
+.carried-avatar { width: 36px; height: 36px; border-radius: 50%; background: #fff8e3; border: 1px solid rgba(201,168,76,.35); display: flex; align-items: center; justify-content: center; flex: 0 0 36px; }
+.carried-avatar .avatar-glyph { width: 60%; height: 60%; color: var(--gold); }
+.carried-body { flex: 1; }
+.carried-text { color: var(--navy); font-family: var(--font-serif); font-size: .98rem; line-height: 1.35; }
+.carried-when { margin-top: .15rem; }
+
+/* 2. Today's Word + Diary */
+.whisper-word { background: linear-gradient(180deg, #fffdf6 0%, #fff8e3 100%); border-left: 3px solid var(--rose, #B33A3A); }
+.word-verse { font-family: var(--font-serif); font-size: 1.15rem; color: var(--navy); font-style: italic; line-height: 1.4; margin: .5rem 0 .25rem; border-left: 3px solid var(--gold); padding-left: .85rem; }
+.word-ref { margin: 0 0 .85rem; }
+.word-diary { margin-top: .85rem; padding-top: .85rem; border-top: 1px dashed rgba(201,168,76,.22); }
+.word-prompt { margin: .25rem 0 .65rem; color: var(--navy); }
+.diary-private-row { display: flex; align-items: center; gap: .4rem; padding: .35rem .5rem; background: rgba(201,168,76,.06); border-radius: 8px; margin-bottom: .5rem; }
+.diary-lock { font-size: 1.1rem; }
+.diary-body {
+  width: 100%; min-height: 6rem;
+  font-family: var(--font-serif); font-size: 1rem; line-height: 1.45; color: var(--navy);
+  padding: .75rem;
+  border: 1px solid rgba(201,168,76,.35); border-radius: 10px;
+  background: #fffefa;
+  resize: vertical;
+}
+.diary-body:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,.12); }
+.diary-actions { display: flex; gap: .5rem; align-items: center; margin-top: .5rem; }
+.diary-status { margin: .35rem 0 0; min-height: 1.2em; }
+
+/* Diary history modal */
+.diary-history-modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; justify-content: center; }
+.diary-history-modal.hidden { display: none; }
+.diary-history-backdrop { position: absolute; inset: 0; background: rgba(26,26,46,.55); backdrop-filter: blur(2px); }
+.diary-history-sheet { position: relative; width: 100%; max-width: 640px; max-height: 80vh; background: var(--cream); border-radius: 16px 16px 0 0; padding: 1rem; overflow: auto; box-shadow: 0 -8px 24px rgba(0,0,0,.2); }
+.diary-history-head h3 { margin: 0 0 .25rem; font-family: var(--font-serif); color: var(--navy); }
+.diary-history-list { display: flex; flex-direction: column; gap: .85rem; margin: .85rem 0; }
+.diary-entry { background: #fffefa; border: 1px solid rgba(201,168,76,.25); border-radius: 10px; padding: .75rem; }
+.diary-entry-head { display: flex; align-items: center; gap: .35rem; margin-bottom: .3rem; }
+.diary-entry-head .link { margin-left: auto; color: var(--rose, #B33A3A); }
+.diary-entry-verse { margin: 0 0 .35rem; font-style: italic; }
+.diary-entry-body { white-space: pre-wrap; color: var(--navy); font-family: var(--font-serif); margin: 0; }
+.diary-history-foot { display: flex; justify-content: flex-end; padding-top: .5rem; border-top: 1px dashed rgba(201,168,76,.25); }
+
+/* 3. A teaching to live */
+.whisper-teaching { background: linear-gradient(180deg, #fffdf6 0%, #f6efd9 100%); border-left: 3px solid var(--forest, #557A4B); }
+#teaching-kind { font-style: italic; color: var(--forest, #557A4B); }
+.teaching-title { margin: .25rem 0; font-family: var(--font-serif); color: var(--navy); font-size: 1.15rem; }
+.teaching-source { margin: 0 0 .55rem; }
+.teaching-teach { margin: 0 0 .65rem; color: var(--navy); line-height: 1.45; }
+.teaching-move { margin: .65rem 0 0; padding: .5rem .75rem; background: rgba(85,122,75,.08); border-radius: 8px; color: var(--navy); }
+
+/* 4. Your moments today */
+.mine-list { display: flex; flex-direction: column; gap: .45rem; }
+.mine-row { display: flex; align-items: center; gap: .6rem; padding: .45rem .5rem; background: #fffefa; border-left: 3px solid var(--gold); border-radius: 6px; }
+.mine-disc { width: 14px; height: 14px; border-radius: 50%; box-shadow: 0 0 0 2px #fff inset, 0 0 0 1px rgba(0,0,0,.15); flex: 0 0 14px; }
+.mine-body { flex: 1; line-height: 1.3; }
+.mine-body strong { color: var(--navy); font-family: var(--font-serif); }
+
+/* ====== BOTTOM ADD DRAWER for The Book ====== */
+.book-add-drawer {
+  background: #fffdf6;
+  border: 1px dashed rgba(201,168,76,.4);
+  border-radius: 14px;
+  padding: 0;
+  margin: 1.25rem 0 .5rem;
+  box-shadow: none;
+}
+.book-add-drawer > summary {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .85rem 1rem;
+  font-family: var(--font-serif);
+  color: var(--navy);
+  cursor: pointer;
+  list-style: none;
+}
+.book-add-drawer > summary::-webkit-details-marker { display: none; }
+.book-add-drawer > summary::before { content: none; }
+.add-drawer-glyph {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--gold); color: var(--navy);
+  font-weight: 700; font-size: 1.1rem;
+}
+.add-drawer-title { font-weight: 600; }
+.book-add-drawer[open] > summary { border-bottom: 1px solid rgba(201,168,76,.25); }
+.book-add-tabs {
+  display: flex; flex-wrap: wrap; gap: .35rem;
+  padding: .85rem 1rem .35rem;
+  background: #fffaf0;
+}
+.book-add-tab {
+  background: transparent; border: 1px solid #efe8d2; border-radius: 999px;
+  padding: .35rem .75rem; cursor: pointer; font: inherit; font-family: var(--font-serif);
+  color: var(--navy); font-size: .85rem; min-height: 32px;
+}
+.book-add-tab.active { background: var(--gold); border-color: var(--gold); color: var(--navy); font-weight: 600; }
+.book-add-pane { padding: .35rem 1rem 1rem; }
+
+/* Family super-group (Family with sub-buckets) */
+.book-people-supergroup { background: rgba(255,253,242,.5); border-radius: 10px; padding: .65rem .75rem; border: 1px solid rgba(201,168,76,.18); }
+.book-people-superhead { display: flex; align-items: baseline; gap: .5rem; margin-bottom: .65rem; padding-bottom: .35rem; border-bottom: 1px solid rgba(201,168,76,.18); }
+.book-people-superhead strong { font-family: var(--font-serif); color: var(--gold); font-size: 1rem; }
+
+/* Picker "Show all saints" link */
+.saint-picker-more {
+  background: transparent; border: 1px dashed var(--gold); color: var(--gold);
+  border-radius: 999px; padding: .55rem 1.15rem;
+  cursor: pointer; font: inherit; font-family: var(--font-serif);
+  margin-top: .65rem;
+  grid-column: 1 / -1;
+  display: inline-block; align-self: center;
+}
+.saint-picker-more:hover { background: var(--gold); color: var(--navy); }
+
+/* Book rows - shared row layout for sick, petitions, answered */
+.book-rows { display: flex; flex-direction: column; gap: .15rem; margin: .35rem 0 .55rem; }
+.book-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: .75rem;
+  align-items: center;
+  padding: .65rem .4rem;
+  border-bottom: 1px solid rgba(232,223,198,.55);
+  transition: background .15s ease;
+}
+.book-row:last-child { border-bottom: none; }
+.book-row:hover { background: rgba(255,248,227,.4); border-radius: 8px; }
+.book-row.level-1 { background: rgba(139,46,74,.04); border-left: 2px solid var(--rose); padding-left: .65rem; border-radius: 6px; }
+.book-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fffdf2, #fff8e3);
+  border: 1px solid #efe8d2;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--gold);
+}
+.book-avatar svg { width: 55%; height: 55%; color: var(--gold); }
+.book-row-name { font-family: var(--font-serif); color: var(--navy); font-weight: 600; font-size: 1rem; line-height: 1.2; }
+.book-row-sub { color: #5a5a6c; font-size: .92rem; margin-top: .15rem; line-height: 1.4; }
+.book-row-actions { display: flex; gap: .35rem; }
+.book-icon-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #efe8d2;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0;
+  color: var(--gold);
+  transition: transform .12s ease, background .15s ease, border-color .15s ease;
+  min-height: 34px;
+}
+.book-icon-btn svg { width: 55%; height: 55%; color: var(--gold); }
+.book-icon-btn:hover { background: var(--gold); border-color: var(--gold); }
+.book-icon-btn:hover svg { color: #fff; }
+.book-icon-btn:active { transform: scale(.9); }
+.row-pin { margin-left: .35rem; color: var(--gold); display: inline-flex; }
+.row-pin svg { width: 14px; height: 14px; color: var(--gold); }
+.empty-line { padding: .65rem .4rem; font-style: italic; }
+
+/* Our People - grouped avatar grid */
+.book-people-groups { display: flex; flex-direction: column; gap: 1.1rem; margin: .5rem 0; }
+.book-people-group { }
+.book-people-group-head { display: flex; align-items: baseline; gap: .5rem; margin-bottom: .55rem; padding-bottom: .25rem; border-bottom: 1px solid #efe8d2; }
+.book-people-group-head strong { color: var(--navy); font-family: var(--font-serif); font-size: .95rem; }
+.book-people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: .55rem;
+}
+.book-people-cell {
+  background: transparent; border: none; padding: .25rem 0; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  font: inherit;
+  transition: transform .12s ease;
+}
+.book-people-cell:active { transform: scale(.92); }
+.book-people-avatar {
+  position: relative;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fffdf2, #fff8e3);
+  border: 1px solid #efe8d2;
+  display: inline-flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.book-people-avatar svg { width: 32px; height: 32px; color: rgba(201,168,76,.25); }
+.people-avatar-letter {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); color: var(--navy); font-weight: 600; font-size: 1rem;
+}
+.people-avatar-name {
+  font-size: .68rem; color: var(--muted); text-align: center;
+  max-width: 56px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Votive wall - the Faithful Departed as a wall of candles */
+.book-votive-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(58px, 1fr));
+  gap: .55rem;
+  padding: 1.25rem .65rem .85rem;
+  margin: .5rem 0 .65rem;
+  background: linear-gradient(180deg, #5a4636 0%, #3a2d1f 100%);
+  border-radius: 12px;
+  border: 1px solid #1f1812;
+  box-shadow:
+    inset 0 4px 12px rgba(0,0,0,.45),
+    inset 0 -2px 6px rgba(0,0,0,.3),
+    0 2px 8px rgba(0,0,0,.15);
+}
+.book-votive-wall.november { background: linear-gradient(180deg, #6a4a2a 0%, #4a2d1f 100%); box-shadow: inset 0 4px 12px rgba(0,0,0,.45), 0 0 0 2px rgba(201,168,76,.25); }
+.book-votive {
+  background: transparent; border: none; padding: .35rem 0 .25rem;
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  cursor: pointer; font: inherit;
+  transition: transform .12s ease;
+}
+.book-votive:active { transform: scale(.93); }
+.book-votive.anniversary { background: radial-gradient(circle at center, rgba(255,200,90,.18) 0%, transparent 70%); border-radius: 8px; }
+.book-votive-more { text-align: center; margin: .35rem 0 .75rem; font-style: italic; }
+.book-votive-pager { text-align: center; margin: .25rem 0 .65rem; font-variant-numeric: tabular-nums; }
+/* Mobile: lock the wall to 5 columns so 10 candles fit in exactly 2 rows. */
+@media (max-width: 540px) {
+  .book-votive-wall { grid-template-columns: repeat(5, 1fr); gap: .4rem; padding: 1rem .5rem .7rem; }
+  .book-votive .votive-name { font-size: .7rem; max-width: 52px; }
+}
+
+/* ====== HEARTH v2 ====== */
+
+/* 1. The family rollup sentence */
+.hearth-rollup-card { background: linear-gradient(180deg, #fffdf6, #fff); border-left: 3px solid var(--gold); }
+.hearth-rollup {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--navy);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* 2. The family - saint avatars in a row */
+.hearth-family-card h3 { margin: 0 0 .5rem; color: var(--navy); font-family: var(--font-serif); }
+.hearth-family-row { display: flex; gap: 1rem; overflow-x: auto; padding: .25rem 0 .65rem; }
+.hw-member {
+  display: flex; flex-direction: column; align-items: center; gap: .35rem;
+  min-width: 76px; padding: .25rem;
+  background: transparent; border: none; cursor: pointer;
+  transition: transform .12s ease;
+}
+.hw-member:hover { transform: translateY(-2px); }
+.hw-member:active { transform: scale(.96); }
+.hw-saint-avatar {
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fff8e3 0%, #fffdf6 100%);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.avatar-glyph { width: 60%; height: 60%; color: var(--gold); }
+.hw-member-name { font-family: var(--font-serif); color: var(--navy); font-size: .9rem; }
+.hw-prayed-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--forest);
+  margin-top: 2px;
+}
+.hw-mood { font-size: .72rem; font-family: var(--font-serif); font-style: italic; margin-top: 2px; }
+
+/* 3. Ticker */
+.hearth-ticker-card { background: linear-gradient(180deg, var(--navy) 0%, #2a2a44 100%); border: 1px solid rgba(201,168,76,.3); color: var(--cream); }
+.hearth-ticker {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--gold);
+  text-align: center;
+  font-size: 1.05rem;
+  margin: 0;
+  min-height: 1.5em;
+  transition: opacity .25s ease;
+}
+.hearth-ticker .muted { color: #c9a84caa; }
+
+/* 4. Votive candle rack - now a plain dark frame wrapping a single .votive-cycle.
+   (Was a CSS grid back when the rack held individual candle buttons; the grid was
+   crushing the inner cycle into a 58px-wide cell on mobile, mangling the meta.) */
+.hearth-votive-card h3 { margin: 0 0 .5rem; color: var(--navy); font-family: var(--font-serif); }
+.votive-rack {
+  display: block;
+  padding: 1rem .5rem .65rem;
+  background: linear-gradient(180deg, #4a3a2a 0%, #3a2d1f 100%);
+  border-radius: 10px;
+  border: 1px solid #1f1812;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.05);
+}
+.votive {
+  background: transparent; border: none; cursor: pointer; padding: .25rem 0;
+  display: flex; flex-direction: column; align-items: center; gap: .25rem;
+  transition: transform .12s ease;
+}
+.votive:active { transform: scale(.94); }
+.votive-candle {
+  position: relative;
+  width: 28px; height: 50px;
+}
+.votive-candle .votive-cup {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: 0;
+  width: 22px; height: 26px;
+  background: linear-gradient(180deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.04) 100%);
+  border-radius: 3px 3px 6px 6px;
+  border: 1px solid rgba(255, 200, 90, .15);
+  box-shadow: inset 0 2px 3px rgba(0,0,0,.3);
+}
+.votive-candle .votive-flame {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 22px;
+  width: 14px; height: 22px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.votive-candle .votive-flame span {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 90%, #fff8c0 0%, #ffd470 35%, #ffb347 65%, rgba(201,168,76,0) 100%);
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+  animation: flicker-strong 1.4s ease-in-out infinite alternate;
+  box-shadow: 0 0 12px 4px rgba(255, 200, 90, .6), 0 0 30px 10px rgba(255, 170, 60, .3);
+}
+.votive.lit .votive-flame,
+.book-votive.lit .votive-flame { opacity: 1; }
+.votive.lit .votive-cup,
+.book-votive.lit .votive-cup {
+  background: linear-gradient(180deg, rgba(255, 200, 90, .3) 0%, rgba(255, 140, 60, .15) 100%);
+  border-color: rgba(255, 200, 90, .55);
+  box-shadow: inset 0 2px 3px rgba(255, 180, 60, .25), 0 0 12px rgba(255, 170, 60, .3);
+}
+/* Unlit book-votive: muted name + flame stays at opacity 0 from the base rule. */
+.book-votive.unlit .votive-name { color: rgba(244, 236, 214, .55); }
+.book-votive.lit .votive-name { color: #f4ecd6; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+.votive-name {
+  font-family: var(--font-serif);
+  color: #f4ecd6;
+  font-size: .7rem;
+  text-align: center;
+  line-height: 1.1;
+  max-width: 60px;
+  word-break: break-word;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+.votive-count { font-size: .65rem; color: var(--gold); margin-top: -.15rem; }
+
+/* Votive ROTATING card - replaces the grid so the page stays calm. */
+.votive-cycle {
+  background: linear-gradient(180deg, #4a3a2a 0%, #3a2d1f 100%);
+  border-radius: 12px;
+  border: 1px solid #1f1812;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.05);
+  padding: 1rem .9rem;
+  margin: .5rem 0;
+}
+.votive-cycle-meta {
+  display: flex; align-items: baseline; justify-content: center; flex-wrap: nowrap;
+  gap: .4rem;
+  color: #d8c89a; font-size: .78rem; line-height: 1.2;
+  margin-bottom: .45rem;
+  white-space: nowrap; overflow: hidden;
+}
+.votive-meta-stat { color: #d8c89a; font-family: var(--font-serif); }
+.votive-meta-stat strong { color: #f4ecd6; font-weight: 600; font-variant-numeric: tabular-nums; margin-right: .15rem; }
+.votive-meta-sep { color: #c9a84c66; }
+.votive-cycle-stage {
+  width: 100%;
+  background: transparent; border: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: .5rem;
+  padding: .5rem 0 .35rem;
+  transition: transform .12s ease;
+}
+.votive-cycle-stage:active { transform: scale(.99); }
+.votive-cycle-candle {
+  position: relative; width: 44px; height: 78px;
+}
+.votive-cycle-candle .votive-cup {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: 0;
+  width: 34px; height: 40px;
+  background: linear-gradient(180deg, rgba(255, 200, 90, .3) 0%, rgba(255, 140, 60, .15) 100%);
+  border-radius: 4px 4px 8px 8px;
+  border: 1px solid rgba(255, 200, 90, .55);
+  box-shadow: inset 0 2px 3px rgba(255, 180, 60, .25), 0 0 16px rgba(255, 170, 60, .35);
+}
+.votive-cycle-candle .votive-flame {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 36px;
+  width: 20px; height: 32px;
+  opacity: 1; transition: opacity .25s ease;
+}
+.votive-cycle-candle .votive-flame span {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 90%, #fff8c0 0%, #ffd470 35%, #ffb347 65%, rgba(201,168,76,0) 100%);
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+  animation: flicker-strong 1.4s ease-in-out infinite alternate;
+  box-shadow: 0 0 18px 6px rgba(255, 200, 90, .55), 0 0 36px 14px rgba(255, 170, 60, .3);
+}
+.votive-cycle-candle.unlit .votive-flame { opacity: 0; }
+.votive-cycle-candle.unlit .votive-cup {
+  background: linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.03) 100%);
+  border-color: rgba(255, 200, 90, .18);
+  box-shadow: inset 0 2px 3px rgba(0,0,0,.3);
+}
+.votive-cycle-name {
+  font-family: var(--font-serif);
+  color: #f4ecd6;
+  font-size: 1.05rem;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+.votive-cycle-status { color: #c9a84caa; text-align: center; }
+.votive-cycle-actions {
+  display: flex; align-items: center; justify-content: center; gap: .55rem;
+  margin-top: .65rem;
+}
+.votive-cycle-actions #votive-cycle-pos { color: #c9a84caa; font-variant-numeric: tabular-nums; }
+.votive-cycle.paused { outline: 1px dashed rgba(255, 200, 90, .35); outline-offset: 3px; }
+
+/* Hearth votive grid: 10 candles at a time (5x2 mobile), paged through the Book of Life. */
+.votive-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .5rem;
+  margin: .25rem 0 .35rem;
+}
+.votive-grid-cell {
+  background: transparent; border: 1px solid transparent; border-radius: 8px;
+  padding: .35rem .15rem .3rem;
+  display: flex; flex-direction: column; align-items: center; gap: .2rem;
+  cursor: pointer; font: inherit;
+  transition: transform .12s ease, border-color .15s ease, background .15s ease;
+}
+.votive-grid-cell.unlit { opacity: .85; }
+.votive-grid-cell.lit { background: rgba(255, 200, 90, .08); border-color: rgba(255, 200, 90, .18); }
+.votive-grid-cell:active { transform: scale(.93); }
+.votive-grid-cell .votive-cycle-candle { width: 28px; height: 50px; }
+.votive-grid-cell .votive-cycle-candle .votive-cup { width: 22px; height: 26px; }
+.votive-grid-cell .votive-cycle-candle .votive-flame { width: 14px; height: 22px; bottom: 22px; }
+.votive-grid-name {
+  font-family: var(--font-serif);
+  color: #f4ecd6;
+  font-size: .72rem;
+  text-align: center;
+  max-width: 60px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+.votive-grid-status { font-size: .62rem; color: #c9a84caa; }
+@media (max-width: 380px) {
+  .votive-grid { gap: .35rem; }
+  .votive-grid-name { font-size: .65rem; max-width: 52px; }
+}
+
+/* 5. Gestures popover */
+.hearth-gestures.hidden { display: none; }
+.hearth-gestures {
+  position: fixed; inset: 0; z-index: 2000;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.gestures-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(10, 10, 24, .55);
+  backdrop-filter: blur(2px);
+}
+.gestures-sheet {
+  position: relative;
+  background: var(--cream);
+  border-radius: 16px 16px 0 0;
+  width: 100%;
+  max-width: 540px;
+  padding: 1.25rem 1rem 2rem;
+  box-shadow: 0 -4px 28px rgba(0,0,0,.25);
+  animation: sheet-up .25s ease;
+}
+@keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.gestures-name { text-align: center; margin: 0 0 1rem; color: var(--navy); }
+.gestures-name strong { font-family: var(--font-serif); }
+.gestures-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem;
+}
+.gesture-btn {
+  background: #fff; border: 1px solid #e8dfc6; border-radius: 14px;
+  padding: .85rem .4rem .65rem;
+  display: flex; flex-direction: column; align-items: center; gap: .35rem;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .15s ease;
+}
+.gesture-btn:hover { box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+.gesture-btn:active { transform: scale(.95); }
+.gesture-icon { font-size: 1.6rem; line-height: 1; }
+.gesture-label { font-family: var(--font-serif); font-size: .72rem; color: var(--navy); text-align: center; line-height: 1.15; }
+#gestures-cancel { display: block; margin: 1rem auto 0; max-width: 200px; }
 
 /* WALK */
 .walk-launch { text-align: center; padding: 2rem 1.5rem; }
@@ -95,7 +1229,24 @@
 }
 .bead.done { background: var(--gold); border-color: var(--gold); }
 .bead.current { background: #ffd877; border-color: #ffd877; box-shadow: 0 0 0 3px rgba(201,168,76,.25); }
-.walk-meta { color: #c9a84caa; font-size: .9rem; margin-top: .5rem; }
+.walk-meta { color: #c9a84caa; font-size: .9rem; margin-top: .5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* Named Rosary — one name per Hail Mary */
+.named-intention {
+  margin: 1rem auto;
+  padding: .85rem 1.1rem;
+  background: rgba(201, 168, 76, .08);
+  border: 1px solid rgba(201, 168, 76, .4);
+  border-radius: var(--radius);
+  max-width: 460px;
+  text-align: center;
+}
+.named-intention.hidden { display: none; }
+.named-intention .muted { color: #c9a84caa; display: block; }
+.named-intention strong { font-family: var(--font-serif); font-size: 1.25rem; color: var(--gold); display: block; margin: .25rem 0; }
+.named-intention[data-urgency="emergency"] { background: rgba(139, 46, 74, .25); border-color: var(--rose); }
+.named-intention[data-urgency="emergency"] strong { color: #ffb3c8; }
+.named-intention[data-urgency="urgent"] { background: rgba(201, 138, 76, .15); border-color: #c98a4c; }
 .screen-walk-active button.ghost { color: var(--cream); border-color: #3b3b58; }
 
 /* WALK TAIL */
@@ -161,10 +1312,7 @@
   padding: .35rem .65rem; min-height: 32px; font-size: .85rem;
 }
 
-/* DEAD / Book */
-.dead-item { display: grid; grid-template-columns: 44px 1fr auto; gap: .75rem; align-items: center; }
-.dead-photo { width: 44px; height: 44px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; color: var(--navy); font-family: var(--font-serif); font-weight: 600; }
-.dead-item .nov-banner { grid-column: 1 / -1; padding: .65rem .85rem; background: #fffdf6; border-radius: 10px; border: 1px solid #e8dfc6; }
+/* BOOK OF LIFE */
 .nov-banner-global {
   background: linear-gradient(180deg, #fff8e3, #fffdf6);
   border: 1px solid #e8dfc6;
@@ -174,6 +1322,157 @@
   font-family: var(--font-serif);
   color: var(--navy);
 }
+
+.anniversary-banner {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  background: linear-gradient(180deg, #1A1A2E, #2a2a44);
+  color: var(--cream);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1.1rem 1rem;
+  margin: .75rem 0;
+  box-shadow: 0 4px 22px rgba(201,168,76,.28), 0 0 0 1px rgba(201,168,76,.15);
+}
+.anniversary-banner .ab-text strong { color: var(--gold); font-family: var(--font-serif); }
+.anniversary-banner .ab-text p { color: #d6cdb6; margin: .25rem 0 0; }
+.anniversary-banner button.primary { width: auto; min-width: 110px; margin: 0; }
+
+.life-entry {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 1.1rem 1rem;
+  margin: .65rem 0;
+  box-shadow: var(--shadow);
+  border-left: 3px solid #e8dfc6;
+  min-height: 120px;
+}
+.life-entry.anniversary { border-left-color: var(--gold); background: linear-gradient(180deg, #fffdf6, #fff); }
+.life-name { font-family: var(--font-serif); font-weight: 600; color: var(--navy); font-size: 1.1rem; }
+.patron-tag { background: var(--gold); color: var(--navy); font-size: .7rem; padding: .1rem .5rem; border-radius: 999px; margin-left: .35rem; vertical-align: middle; font-family: var(--font-sans); font-weight: 600; }
+.life-rel { color: var(--muted); font-size: .9rem; margin-top: .15rem; }
+.life-story { font-family: var(--font-serif); color: var(--navy); margin-top: .35rem; line-height: 1.6; }
+.life-dates { margin-top: .35rem; }
+.life-actions button.primary { width: auto; min-width: 110px; margin: 0; padding: .5rem .8rem; }
+
+.life-candle { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.lit-count { font-size: .7rem; color: var(--gold); font-family: var(--font-serif); }
+
+/* Large candle visual used in life-entry and anniversary banner.
+   Sized prominently because the candle IS the act of remembrance. */
+.candle-large {
+  position: relative;
+  width: 52px;
+  height: 96px;
+  margin: 0 auto;
+}
+.candle-large::after {
+  content: '';
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  bottom: 0;
+  width: 28px; height: 46px;
+  background: linear-gradient(180deg, #f4ecd6 0%, #e0d4a8 60%, #c9b878 100%);
+  border-radius: 4px 4px 2px 2px;
+  box-shadow: inset 0 -6px 8px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.4);
+  z-index: 1;
+}
+.candle-large .wick {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 44px; width: 2px; height: 10px;
+  background: #1a1a2e; border-radius: 1px;
+  z-index: 2;
+}
+.candle-large .flame {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 50px; width: 32px; height: 50px;
+  pointer-events: none;
+  z-index: 3;
+}
+.candle-large .flame span {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 100%; width: 100%;
+  background: radial-gradient(ellipse at 50% 85%, #ffffff 0%, #ffe17a 20%, #ffb347 55%, #c9a84c 80%, rgba(201,168,76,0) 100%);
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+  filter: blur(.5px);
+  transform-origin: 50% 100%;
+  animation: flicker-strong 1.4s ease-in-out infinite alternate;
+  box-shadow:
+    0 0 16px 6px rgba(255, 200, 90, .65),
+    0 0 40px 16px rgba(255, 170, 60, .35),
+    0 0 70px 28px rgba(201, 168, 76, .18);
+}
+/* Halo behind the flame for a richer glow */
+.candle-large .flame::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 30%;
+  transform: translate(-50%, -50%);
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,193,87,.4) 0%, rgba(255,170,60,.1) 50%, transparent 75%);
+  animation: halo-pulse 2.2s ease-in-out infinite alternate;
+  z-index: -1;
+}
+@keyframes flicker-strong {
+  0%   { transform: translateY(0) scale(1, 1) rotate(-2deg);   opacity: 1; }
+  15%  { transform: translateY(-1px) scale(1.08, .92) rotate(2deg);  opacity: .92; }
+  30%  { transform: translateY(0) scale(.95, 1.06) rotate(-3deg);    opacity: 1; }
+  45%  { transform: translateY(-2px) scale(1.1, .9) rotate(3deg);    opacity: .85; }
+  60%  { transform: translateY(0) scale(1.04, .96) rotate(-1deg);    opacity: 1; }
+  75%  { transform: translateY(-1px) scale(.98, 1.04) rotate(1deg);  opacity: .94; }
+  100% { transform: translateY(-1px) scale(1.05, .95) rotate(-2deg); opacity: .98; }
+}
+@keyframes halo-pulse {
+  0%   { opacity: .55; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: .85; transform: translate(-50%, -50%) scale(1.18); }
+}
+
+/* Unlit: dim wick, no flame, darker wax */
+.life-candle.unlit .candle-large .flame { display: none; }
+.life-candle.unlit .candle-large .wick { background: #2a2a44; height: 6px; bottom: 46px; opacity: .6; }
+.life-candle.unlit .candle-large::after {
+  background: linear-gradient(180deg, #d8cfb3 0%, #b8a87a 100%);
+  opacity: .9;
+}
+/* Lit gets a subtle warm cast on the wax itself */
+.life-candle.lit .candle-large::after {
+  box-shadow: inset 0 -6px 8px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.4),
+              0 0 12px rgba(255, 170, 60, .25);
+}
+
+/* Our People */
+.people-group h4 { color: var(--navy); margin: 0 0 .35rem; font-family: var(--font-serif); border-bottom: 1px solid #e8dfc6; padding-bottom: .25rem; }
+ul.people-list { list-style: none; padding: 0; margin: .4rem 0 0; }
+ul.people-list li { padding: .45rem 0; border-bottom: 1px dashed #f0e8d0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem; }
+ul.people-list li:last-child { border-bottom: none; }
+.person-name { font-family: var(--font-serif); color: var(--navy); font-weight: 600; }
+.delete-person { margin-left: auto; font-size: .8rem; color: var(--muted); background: none; border: none; cursor: pointer; }
+.delete-person:hover { color: var(--rose); }
+
+/* Two-column inline row for month/day pickers etc. */
+.row.two-up { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: .75rem; }
+.row.two-up select { width: 100%; }
+
+/* Collapsible card */
+details.collapsible { padding: .85rem 1rem; }
+details.collapsible > summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-serif);
+  color: var(--navy);
+  padding: .25rem 0;
+}
+details.collapsible > summary::-webkit-details-marker { display: none; }
+details.collapsible > summary::before { content: '+ '; color: var(--gold); font-weight: 700; }
+details.collapsible[open] > summary::before { content: '- '; }
+details.collapsible[open] > summary { margin-bottom: .75rem; }
 
 /* MORNING */
 .screen-morning { background: linear-gradient(180deg, #fffdf6, var(--cream)); }

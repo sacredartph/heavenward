@@ -1,2 +1,23 @@
-﻿node_modules/
+node_modules/
 *.env
+
+# Logs (server stdout/stderr captured by NSSM)
+*.log
+backend.stdout.log
+backend.stderr.log
+server.log
+server.err.log
+
+# SQLite working files - db is binary + conflicts, WAL/SHM are scratch
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Local database backups (rolling, large)
+database/*.backup-*.db
+database/*.bak
+
+# Editor / OS scratch
+.DS_Store
+Thumbs.db
+*.swp

@@ -399,7 +399,99 @@ const compact = [
     patron: 'young people, students, editors, magicians', tags: '["youth","education","salesian","preventive_system","joy"]',
     brief: 'The Italian priest who founded the Salesians and built oratories for thousands of poor boys in industrial Turin.',
     quote: 'It is enough that you are young for me to love you.',
-    adult: 'Giovanni Melchiorre Bosco, 1815-1888. Italian diocesan priest. Founded the Salesians of Don Bosco, with his Preventive System of education: reason, religion, kindness. Built oratories for poor boys in Turin during the industrial revolution. Could juggle, do magic tricks, and walk a tightrope; used them to gather boys for catechism. The Salesians are now one of the largest religious congregations in the Church.' }
+    adult: 'Giovanni Melchiorre Bosco, 1815-1888. Italian diocesan priest. Founded the Salesians of Don Bosco, with his Preventive System of education: reason, religion, kindness. Built oratories for poor boys in Turin during the industrial revolution. Could juggle, do magic tricks, and walk a tightrope; used them to gather boys for catechism. The Salesians are now one of the largest religious congregations in the Church.' },
+
+  // === Filling common gaps so most days have a saint ===
+
+  { slug: 'simon-stock', name: 'St. Simon Stock', feast: '05-16', cat: 'religious', era: '13th century', nat: 'English',
+    patron: 'tanners, the Carmelite order, those who wear the brown scapular', tags: '["carmelite","marian","scapular","prayer"]',
+    brief: 'The English Carmelite to whom Our Lady gave the brown scapular.',
+    quote: 'Flower of Carmel, vine blossom-laden.',
+    adult: 'Simon Stock, c. 1165-1265, the early prior general of the Carmelite Order in Europe. Tradition holds that on the night of July 16, 1251, the Blessed Virgin appeared to him at Cambridge holding the brown scapular and promising her protection to all who would wear it faithfully. From this devotion comes the centuries-old practice of the brown scapular and the Sabbatine privilege. Patron of the Carmelite Order and a Marian saint of quiet, hidden faithfulness.' },
+
+  { slug: 'john-nepomucene', name: 'St. John Nepomucene', feast: '05-16', cat: 'martyr', era: '14th century', nat: 'Bohemian',
+    patron: 'the seal of the confessional, bridges, against floods, Bohemia, Czechia', tags: '["martyrdom","confession","priesthood","silence"]',
+    brief: 'The Czech priest martyred for refusing to break the seal of the confessional - thrown from the Charles Bridge in Prague.',
+    quote: 'I will not break the seal.',
+    adult: 'Jan Nepomucky, c. 1345-1393. Priest of the diocese of Prague and confessor to the queen of Bohemia. King Wenceslaus IV demanded John reveal what the queen had told him in confession. He refused. The king had him tortured and then bound and thrown from the Charles Bridge into the Vltava river. The patron of all who keep the seal of the confessional, and of bridges, the most depicted saint in Central Europe after Mary.' },
+
+  { slug: 'matthias-apostle', name: 'St. Matthias the Apostle', feast: '05-14', cat: 'apostle', era: '1st century', nat: 'Israelite',
+    patron: 'alcoholics, carpenters, tailors, against smallpox', tags: '["apostle","election","replacement_of_judas"]',
+    brief: 'The apostle chosen by lot to replace Judas after the Resurrection.',
+    quote: 'Show, O Lord, which one of these you have chosen.',
+    adult: 'Matthias, chosen by lot from among the seventy-two disciples to take the place of Judas Iscariot (Acts 1:15-26). Tradition places his later mission in Cappadocia and the regions around the Caspian Sea, where he is said to have been martyred. The thirteenth apostle.' },
+
+  { slug: 'isidore-farmer', name: 'St. Isidore the Farmer', feast: '05-15', cat: 'lay_youth', era: '11th-12th century', nat: 'Spanish',
+    patron: 'farmers, rural communities, Madrid, day laborers', tags: '["farmer","work","poverty","layperson","family"]',
+    brief: 'A Spanish farmer whose plow was driven by angels while he prayed at Mass.',
+    quote: 'Lord, what wonderful work you give me to do.',
+    adult: 'Isidro de Merlo y Quintana, c. 1070-1130. A Spanish farm laborer outside Madrid, married to St. Maria Torribia (Maria de la Cabeza). Famous for his daily attendance at Mass before work and for the legend that angels drove his plow while he prayed. He and his wife lost their only son in childhood. Patron of farmers, of Madrid, and of working laypeople.' },
+
+  { slug: 'rita-2', name: 'St. Pope John I', feast: '05-18', cat: 'pope', era: '6th century', nat: 'Italian',
+    patron: 'martyrs, those imprisoned for the faith', tags: '["papacy","martyrdom","arian"]',
+    brief: 'A pope sent on a diplomatic mission to Constantinople by an Arian king, then imprisoned and starved to death on his return.',
+    quote: 'I have kept the faith.',
+    adult: 'John I (470-526), the 53rd Bishop of Rome. Sent by the Arian Ostrogoth king Theodoric to Constantinople to negotiate with the Catholic emperor Justin I. The mission succeeded on most points but the king was displeased and on John\'s return imprisoned him at Ravenna, where he died of starvation and ill-treatment.' },
+
+  { slug: 'paschal-baylon', name: 'St. Paschal Baylon', feast: '05-17', cat: 'religious', era: '16th century', nat: 'Spanish',
+    patron: 'Eucharistic congresses, shepherds, cooks', tags: '["eucharist","franciscan","poverty","contemplation"]',
+    brief: 'The Franciscan shepherd-saint of Eucharistic adoration.',
+    quote: 'I seek God in the tabernacle.',
+    adult: 'Paschal Baylon, 1540-1592. Spanish Franciscan lay brother, born to peasants, a shepherd as a child, taught himself to read so he could pray the Office of the Blessed Sacrament. Famous throughout Spain for his ecstatic devotion to the Holy Eucharist. Declared by Leo XIII the patron of all Eucharistic Congresses and confraternities of the Blessed Sacrament.' },
+
+  { slug: 'bernardine-siena', name: 'St. Bernardine of Siena', feast: '05-20', cat: 'religious', era: '14th-15th century', nat: 'Italian',
+    patron: 'advertisers, communicators, against hoarseness, gambling addicts', tags: '["franciscan","preaching","holy_name","reform"]',
+    brief: 'The great Franciscan preacher of the Holy Name of Jesus.',
+    quote: 'Jesus, name above every name.',
+    adult: 'Bernardine of Siena, 1380-1444. Italian Franciscan preacher. Reformed the Observant branch of the Franciscan order, preached missions across northern and central Italy that drew tens of thousands, and popularized the IHS monogram of the Holy Name of Jesus, which he held up on a tablet for the crowds to venerate. A doctor of the holy name.' },
+
+  { slug: 'philip-neri', name: 'St. Philip Neri', feast: '05-26', cat: 'religious', era: '16th century', nat: 'Italian',
+    patron: 'Rome, joy, comedians, the Oratory', tags: '["joy","humor","oratory","reform","rome"]',
+    brief: 'The cheerful saint of Rome, the apostle of joy, founder of the Oratory.',
+    quote: 'A joyful heart is more easily made perfect than a downcast one.',
+    adult: 'Filippo Romolo Neri, 1515-1595. Florentine layman who walked the streets of Rome at night during the chaos of the post-Reformation Church, sleeping in catacombs to pray with the martyrs. Founded the Oratory, a community of priests dedicated to preaching, music (with Palestrina), and the spiritual care of pilgrims and the poor. A saint famous for laughter, practical jokes used to humble pride, and a tenderness with sinners that drew Rome back to confession.' },
+
+  { slug: 'paul-vi', name: 'St. Pope Paul VI', feast: '05-29', cat: 'pope', era: '20th century', nat: 'Italian',
+    patron: 'evangelization, the Second Vatican Council', tags: '["papacy","vatican_ii","evangelii_nuntiandi","humanae_vitae"]',
+    brief: 'The pope who saw Vatican II to its close and defended the dignity of marriage in Humanae Vitae.',
+    quote: 'To evangelize is the deepest identity of the Church.',
+    adult: 'Giovanni Battista Montini, 1897-1978. Pope from 1963. Saw the Second Vatican Council to its close and oversaw its implementation. Issued Humanae Vitae (1968) reaffirming Catholic teaching on married love, the unitive and procreative meanings of conjugal love, and the moral evil of contraception. Wrote Evangelii Nuntiandi (1975) which Pope Leo XIV still calls the magna carta of evangelization. Canonized 2018.' },
+
+  { slug: 'pentecost-mary', name: 'Mary, Mother of the Church', feast: '06-01', cat: 'marian', era: '1st century', nat: 'Israelite',
+    patron: 'the universal Church, pastors, Christian unity', tags: '["marian","ecclesiology","pentecost","motherhood"]',
+    brief: 'Mary contemplated as the Mother of the Church, given by Christ from the cross.',
+    quote: 'Behold thy mother.',
+    adult: 'A liturgical memorial established for the whole Latin Church in 2018, observed on the Monday after Pentecost. It crystallizes a title used since the patristic era and emphasized at Vatican II: Mary as Mother of the Church, given to all the faithful by Christ from the cross when he said to the beloved disciple, "Behold thy mother." (John 19:27)' },
+
+  { slug: 'norbert', name: 'St. Norbert', feast: '06-06', cat: 'religious', era: '11th-12th century', nat: 'German',
+    patron: 'safe childbirth, peace, the Premonstratensians', tags: '["reform","priesthood","preaching","peace"]',
+    brief: 'A German nobleman turned wandering preacher who founded the Premonstratensian (Norbertine) canons.',
+    quote: 'Preach by your life.',
+    adult: 'Norbert of Xanten, c. 1080-1134. Lived a worldly life as a canon at the court of Cologne until a near-death experience converted him. Ordained, he gave away his wealth, walked Europe barefoot as a preacher of peace, and founded the Premonstratensian Order at Premontre in France. Later became Archbishop of Magdeburg.' },
+
+  { slug: 'aloysius-gonzaga', name: 'St. Aloysius Gonzaga', feast: '06-21', cat: 'religious', era: '16th century', nat: 'Italian',
+    patron: 'youth, students, plague victims, AIDS caregivers', tags: '["youth","jesuit","chastity","plague","sacrifice"]',
+    brief: 'The Italian nobleman-turned-Jesuit who died at twenty-three nursing plague victims in Rome.',
+    quote: 'It is better to be a child of God than the king of all the earth.',
+    adult: 'Luigi Gonzaga, 1568-1591. Eldest son of an Italian marquis. Renounced his inheritance to enter the Society of Jesus. While still a young Jesuit student in Rome, the plague struck the city; he volunteered to carry the dying to hospitals. He caught the plague from a sick man he was carrying on his back and died at twenty-three. Patron of Catholic youth.' },
+
+  { slug: 'cyril-methodius', name: 'Sts. Cyril and Methodius', feast: '02-14', cat: 'religious', era: '9th century', nat: 'Greek',
+    patron: 'Europe, Slavic peoples, ecumenism', tags: '["missionaries","slavic","alphabet","europe"]',
+    brief: 'The Greek brothers who brought the Gospel to the Slavs and gave them an alphabet.',
+    quote: 'The Word of God should be heard in every language.',
+    adult: 'Cyril (Constantine, 826-869) and Methodius (815-885), Byzantine brothers from Thessalonica. Sent on mission to the Slavic peoples of Great Moravia, they translated the Scriptures and the Liturgy into Old Church Slavonic, inventing the Glagolitic alphabet (the ancestor of Cyrillic). Co-Patrons of Europe with St. Benedict, St. Bridget of Sweden, St. Catherine of Siena, and St. Teresa Benedicta of the Cross.' },
+
+  { slug: 'sacred-heart', name: 'Sacred Heart of Jesus', feast: '06-19', cat: 'devotion', era: 'eternal', nat: 'divine',
+    patron: 'all Catholic families enthroned to His Sacred Heart, devotees of the First Friday', tags: '["sacred_heart","devotion","mercy","love"]',
+    brief: 'The pierced and burning Heart of Jesus, revealed to St. Margaret Mary Alacoque.',
+    quote: 'Behold this Heart which has so loved men.',
+    adult: 'The Solemnity of the Most Sacred Heart of Jesus is celebrated on the Friday after the Second Sunday after Pentecost. It contemplates the visible, physical Heart of Christ as the symbol of his divine and human love, especially his love for all mankind shown in his Passion. The modern devotion was given fresh urgency through the visions of St. Margaret Mary Alacoque (1647-1690) at Paray-le-Monial.' },
+
+  { slug: 'visitation', name: 'The Visitation', feast: '05-31', cat: 'feast', era: '1st century', nat: 'Israelite',
+    patron: 'expectant mothers, the elderly, family visits', tags: '["marian","visitation","magnificat","mary"]',
+    brief: 'Mary, newly pregnant, hurries into the hill country to her cousin Elizabeth.',
+    quote: 'My soul magnifies the Lord.',
+    adult: 'The feast of the Visitation (Luke 1:39-56) celebrates Mary\'s visit to her cousin Elizabeth shortly after the Annunciation. The first Christian act recorded in Scripture is Mary carrying Christ in her womb to bless another household. At the meeting, Elizabeth\'s child (John the Baptist) leaps in the womb and Mary breaks into the Magnificat. A feast of family, of hidden grace, and of the unborn.' }
 ];
 
 for (const c of compact) {

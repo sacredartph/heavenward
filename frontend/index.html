@@ -43,7 +43,6 @@
     </form>
     <p class="login-sep">— or —</p>
     <button class="ghost" id="btn-go-register">Begin a new family</button>
-    <p class="login-test muted small">Test family: tatay@manubag.ph / heavenward2026 - or - nanay@manubag.ph / heavenward2026</p>
   </div>
 </section>
 
@@ -85,7 +84,7 @@
 <!-- HOME -->
 <section id="screen-home" class="screen screen-home">
   <header class="topbar">
-    <div class="brand">Heavenward</div>
+    <div class="brand">Heavenward <span class="build-chip" id="build-chip" title="Tap to fresh-load"></span></div>
     <div class="who"><span id="who-name"></span> <button class="link" id="btn-logout">sign out</button></div>
   </header>
 
@@ -94,75 +93,188 @@
     <h2 id="greeting-line">Welcome home.</h2>
   </div>
 
+  <div class="home-next-prayer card hidden" id="home-next-prayer"></div>
+
   <div class="home-saint card" id="home-saint"></div>
 
-  <div class="home-prayer-cards">
-    <button class="card glow" id="card-morning">
-      <h3>Morning Offering</h3>
-      <p class="muted small">Begin the day with him.</p>
-    </button>
-    <button class="card glow" id="card-rosary">
-      <h3>Begin the Rosary</h3>
-      <p class="muted small" id="rosary-set">—</p>
-    </button>
-    <button class="card glow" id="card-night">
-      <h3>Night Prayer & Examen</h3>
-      <p class="muted small">Close the day in peace.</p>
+  <!-- Stained-glass moment picker. Reading order: where is the Church (above) -> where are YOU -> what to pray -> the family. -->
+  <div id="moment-area">
+    <div class="card moment-picker" id="moment-picker">
+      <h3>How are you right now?</h3>
+      <p class="muted small">Tap a color. He hears.</p>
+      <div class="moment-discs" id="moment-discs-home"></div>
+    </div>
+    <button class="moment-pill hidden" id="moment-pill" type="button">
+      <span class="pill-glass" id="pill-glass"></span>
+      <span class="pill-echo" id="pill-echo"></span>
     </button>
   </div>
+
+  <div class="card without-ceasing-card">
+    <div class="without-ceasing-header">
+      <h3>Pray Without Ceasing</h3>
+      <p class="muted small"><em>the family's hours</em></p>
+    </div>
+    <div class="hours-grid" id="hours-grid">
+      <!-- populated by refreshHome() -->
+    </div>
+    <p class="muted small italic-cta" id="hours-cta">&nbsp;</p>
+  </div>
+
+  <div class="home-emergency card hidden" id="emergency-card"></div>
 
   <div class="home-presence card">
     <h3>The family today</h3>
     <div id="presence-row" class="presence-row"></div>
   </div>
 
-  <div class="home-emergency card hidden" id="emergency-card"></div>
-
-  <div class="moment card">
-    <h3>How are you right now?</h3>
-    <p class="muted small">Tap one. He is listening.</p>
-    <div class="moment-buttons">
-      <button data-moment="tired">Tired</button>
-      <button data-moment="grateful">Grateful</button>
-      <button data-moment="working">Working</button>
-      <button data-moment="struggling">Struggling</button>
-      <button data-moment="joyful">Joyful</button>
-      <button data-moment="sick">Sick</button>
-      <button data-moment="angry">Angry</button>
-      <button data-moment="afraid">Afraid</button>
-      <button data-moment="peaceful">Peaceful</button>
-      <button data-moment="loved">Loved</button>
-    </div>
-  </div>
-
   <nav class="bottom-nav">
     <button class="nav-btn active" data-screen="home">Home</button>
     <button class="nav-btn" data-screen="walk-launch">Walk</button>
     <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
-    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="prayer">The Book</button>
     <button class="nav-btn" data-screen="hearth">Hearth</button>
-    <button class="nav-btn" data-screen="saints">Saints</button>
   </nav>
 </section>
 
-<!-- WALK LAUNCH -->
+<!-- WALK LAUNCH - three premium cards, no radios -->
 <section id="screen-walk-launch" class="screen screen-walk-launch">
   <header class="topbar"><div class="brand">The Walk</div></header>
-  <div class="walk-launch card">
-    <h2 id="walk-set-name">—</h2>
-    <p class="muted">Mystery set for today.</p>
-    <label class="row"><input type="radio" name="walk-mode" value="solo" checked> Walk solo</label>
-    <label class="row"><input type="radio" name="walk-mode" value="family"> Walk with family</label>
-    <button class="primary" id="btn-begin-rosary">Begin the rosary</button>
-  </div>
+  <p class="walk-launch-subtitle muted small"><em>Three ways the family walks toward heaven.</em></p>
+
+  <button class="walk-path-card walk-path-rosary" id="card-rosary-walk">
+    <div class="wpc-glyph" id="wpc-rosary-glyph"></div>
+    <div class="wpc-body">
+      <div class="wpc-name">The Rosary</div>
+      <div class="wpc-sub" id="walk-set-name">—</div>
+      <div class="wpc-meta"><span>~20 minutes</span><span class="dot">&middot;</span><span id="walk-named-count">— names waiting</span></div>
+    </div>
+    <div class="wpc-chevron">›</div>
+  </button>
+
+  <button class="walk-path-card walk-path-camino" id="card-camino">
+    <div class="wpc-glyph" id="wpc-camino-glyph"></div>
+    <div class="wpc-body">
+      <div class="wpc-name">A Camino</div>
+      <div class="wpc-sub">Walk for someone you love</div>
+      <div class="wpc-meta"><span>~5 - 10 minutes</span><span class="dot">&middot;</span><span>steps become prayer</span></div>
+    </div>
+    <div class="wpc-chevron">›</div>
+  </button>
+
+  <button class="walk-path-card walk-path-saint" id="card-saint-walk">
+    <div class="wpc-glyph" id="wpc-saint-glyph"></div>
+    <div class="wpc-body">
+      <div class="wpc-name">A Saint's Companion</div>
+      <div class="wpc-sub" id="saint-walk-sub">Walk with the saint of today</div>
+      <div class="wpc-meta"><span>~5 minutes</span><span class="dot">&middot;</span><span>they walk beside you</span></div>
+    </div>
+    <div class="wpc-chevron">›</div>
+  </button>
+
+  <p class="italic-cta walk-launch-cta">Whom will you carry today?</p>
+
   <nav class="bottom-nav">
     <button class="nav-btn" data-screen="home">Home</button>
     <button class="nav-btn active" data-screen="walk-launch">Walk</button>
     <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
-    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="prayer">The Book</button>
     <button class="nav-btn" data-screen="hearth">Hearth</button>
-    <button class="nav-btn" data-screen="saints">Saints</button>
   </nav>
+</section>
+
+<!-- CAMINO PICK A RECIPIENT -->
+<section id="screen-camino-pick" class="screen screen-camino-pick">
+  <header class="topbar"><div class="brand">A Camino</div></header>
+  <p class="muted small camino-pick-intro"><em>Choose whom you walk for. Your steps become prayer.</em></p>
+  <div class="camino-pick-list" id="camino-pick-list"></div>
+  <details class="card collapsible" id="camino-free-intent-card">
+    <summary><strong>Or walk for something else</strong></summary>
+    <input id="camino-free-text" placeholder="A word about who or what" maxlength="80">
+    <button class="primary" id="btn-camino-free">Begin the Camino</button>
+  </details>
+  <button class="ghost small" id="btn-camino-cancel">never mind</button>
+</section>
+
+<!-- PILGRIM PATH - shared by Camino + Saint Walk -->
+<section id="screen-pilgrim" class="screen screen-pilgrim full-screen">
+  <div class="pilgrim-stage">
+    <div class="pilgrim-title" id="pilgrim-title">For —</div>
+    <div class="pilgrim-sub muted small" id="pilgrim-sub">&nbsp;</div>
+
+    <svg class="pilgrim-svg" viewBox="0 0 240 480" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="pilgrim-grad" x1="0" y1="100%" x2="0" y2="0%">
+          <stop offset="0%"  stop-color="#C9A84C" stop-opacity="0.85"/>
+          <stop offset="50%" stop-color="#FFD877" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#FFF8C0" stop-opacity="0.9"/>
+        </linearGradient>
+        <radialGradient id="pilgrim-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"  stop-color="#FFD877" stop-opacity="0.7"/>
+          <stop offset="60%" stop-color="#C9A84C" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Destination glow -->
+      <circle cx="120" cy="40" r="70" fill="url(#pilgrim-glow)" class="pilgrim-destination-glow"/>
+
+      <!-- The path - dim trace -->
+      <path id="pilgrim-path-trace"
+        d="M 120,455 C 70,395 175,335 100,265 S 165,165 95,115 S 145,55 120,30"
+        stroke="rgba(201,168,76,0.18)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- The path - bright fill (length controlled by stroke-dashoffset) -->
+      <path id="pilgrim-path-fill"
+        d="M 120,455 C 70,395 175,335 100,265 S 165,165 95,115 S 145,55 120,30"
+        stroke="url(#pilgrim-grad)" stroke-width="3.5" fill="none" stroke-linecap="round"
+        stroke-dasharray="1000" stroke-dashoffset="1000"/>
+
+      <!-- Destination icon -->
+      <g id="pilgrim-destination" transform="translate(120, 30)">
+        <circle r="22" fill="#fff8e3" stroke="#C9A84C" stroke-width="1.5"/>
+        <g id="pilgrim-destination-glyph" transform="translate(-12, -12) scale(1)"></g>
+        <text id="pilgrim-destination-letter" x="0" y="6" text-anchor="middle" fill="#1A1A2E" font-family="Georgia, serif" font-size="20" font-weight="600"></text>
+      </g>
+
+      <!-- Saint companion (only for Saint Walk) -->
+      <g id="pilgrim-companion" transform="translate(120, 455)" opacity="0">
+        <circle r="8" fill="#1A1A2E" opacity="0.6"/>
+        <circle r="3" cy="-9" fill="#1A1A2E" opacity="0.6"/>
+      </g>
+
+      <!-- The pilgrim -->
+      <g id="pilgrim-figure" transform="translate(120, 455)">
+        <circle r="9" fill="#1A1A2E"/>
+        <circle r="3.5" cy="-10" fill="#1A1A2E"/>
+      </g>
+    </svg>
+
+    <div class="pilgrim-meta">
+      <span id="pilgrim-steps">0</span>
+      <span class="muted">/</span>
+      <span id="pilgrim-goal">1000</span>
+      <span class="muted small">steps</span>
+    </div>
+
+    <!-- Saint quote zone (only used in Saint Walk) -->
+    <div class="pilgrim-quote hidden" id="pilgrim-quote">&nbsp;</div>
+
+    <div class="pilgrim-controls">
+      <button class="ghost small" id="btn-pilgrim-end">end early</button>
+    </div>
+  </div>
+</section>
+
+<!-- PILGRIM COMPLETE -->
+<section id="screen-pilgrim-complete" class="screen screen-pilgrim-complete full-screen">
+  <div class="pilgrim-complete">
+    <div class="pilgrim-complete-flame">
+      <div class="candle-large"><div class="wick"></div><div class="flame"><span></span></div></div>
+    </div>
+    <h2 id="pilgrim-complete-line">—</h2>
+    <p class="muted" id="pilgrim-complete-sub">&nbsp;</p>
+    <button class="primary" id="btn-pilgrim-amen">Amen</button>
+  </div>
 </section>
 
 <!-- WALK ACTIVE -->
@@ -172,9 +284,15 @@
     <p class="walk-scripture" id="walk-scripture">—</p>
     <p class="walk-reflection" id="walk-reflection">—</p>
     <p class="walk-question" id="walk-question">—</p>
+    <div class="named-intention" id="named-intention">
+      <span class="muted small">This Hail Mary for</span>
+      <strong id="named-intention-name">—</strong>
+      <div class="muted small" id="named-intention-detail"></div>
+    </div>
     <div class="bead-counter" id="bead-counter"></div>
     <div class="walk-meta">
       <span>Decade <span id="decade-num">1</span> of 5</span>
+      <span>Bead <span id="bead-num">1</span>/50</span>
       <span>Steps: <span id="step-count">0</span></span>
     </div>
     <button class="ghost small" id="btn-next-decade">Next decade</button>
@@ -191,37 +309,93 @@
   </div>
 </section>
 
-<!-- WHISPER MOMENT -->
-<section id="screen-whisper-moment" class="screen screen-whisper-moment">
+<!-- WHISPER - the interior life -->
+<section id="screen-whisper-moment" class="screen screen-whisper-moment screen-whisper-v17">
   <header class="topbar"><div class="brand">The Whisper</div></header>
-  <div class="moment card">
-    <h3>How are you right now?</h3>
-    <p class="muted small">He hears.</p>
-    <div class="moment-buttons">
-      <button data-moment="tired">Tired</button>
-      <button data-moment="grateful">Grateful</button>
-      <button data-moment="working">Working</button>
-      <button data-moment="struggling">Struggling</button>
-      <button data-moment="joyful">Joyful</button>
-      <button data-moment="sick">Sick</button>
-      <button data-moment="angry">Angry</button>
-      <button data-moment="afraid">Afraid</button>
-      <button data-moment="peaceful">Peaceful</button>
-      <button data-moment="loved">Loved</button>
-      <button data-moment="confession">Confession</button>
-      <button data-moment="temptation">Temptation</button>
-      <button data-moment="family">Family</button>
-      <button data-moment="vocation">Vocation</button>
+  <p class="whisper-tag muted small"><em>Your interior life with him.</em></p>
+
+  <!-- 1. You are carried - prayers offered FOR you -->
+  <div class="card whisper-card whisper-carried" id="whisper-carried">
+    <div class="whisper-card-head">
+      <h3>You are carried</h3>
+      <p class="muted small">Acts of love offered for you.</p>
     </div>
+    <div class="carried-list" id="carried-list"></div>
+  </div>
+
+  <!-- 2. Today's Word + Letter to God -->
+  <div class="card whisper-card whisper-word" id="whisper-word">
+    <div class="whisper-card-head">
+      <h3>Today&rsquo;s Word</h3>
+      <p class="muted small" id="word-date">&nbsp;</p>
+    </div>
+    <blockquote class="word-verse" id="word-verse">&nbsp;</blockquote>
+    <p class="word-ref muted small" id="word-ref">&nbsp;</p>
+
+    <div class="word-diary" id="word-diary">
+      <p class="word-prompt italic-cta" id="word-prompt">&nbsp;</p>
+      <div class="diary-private-row">
+        <span class="diary-lock" title="99.9% private - only you can read this">&#128274;</span>
+        <span class="muted small" id="diary-privacy-line">Only you can read this. <em>Just him.</em></span>
+      </div>
+      <textarea id="diary-body" class="diary-body" rows="5" placeholder="Lord, today I..."></textarea>
+      <div class="diary-actions">
+        <button class="primary small" id="diary-save">Send to him</button>
+        <button class="ghost small" id="diary-history">past letters</button>
+      </div>
+      <p class="muted small diary-status" id="diary-status">&nbsp;</p>
+    </div>
+  </div>
+
+  <!-- 3. A teaching to live - cycles daily through Gifts / Fruits / Works / Beatitudes -->
+  <div class="card whisper-card whisper-teaching" id="whisper-teaching">
+    <div class="whisper-card-head">
+      <h3>A teaching to live</h3>
+      <p class="muted small" id="teaching-kind">&nbsp;</p>
+    </div>
+    <h4 class="teaching-title" id="teaching-title">&nbsp;</h4>
+    <p class="teaching-source muted small" id="teaching-source">&nbsp;</p>
+    <p class="teaching-teach" id="teaching-teach">&nbsp;</p>
+    <p class="teaching-move" id="teaching-move">&nbsp;</p>
+  </div>
+
+  <!-- 4. Your moments today - what you have already tapped -->
+  <div class="card whisper-card whisper-mine">
+    <div class="whisper-card-head">
+      <h3>Your moments today</h3>
+    </div>
+    <div class="mine-list" id="mine-list"></div>
+  </div>
+
+  <!-- 5. Stained-glass moment picker - kept at the bottom of the screen -->
+  <div class="card moment-picker moment-picker-whisper">
+    <h3>How are you right now?</h3>
+    <p class="muted small">Tap a color. He hears.</p>
+    <div class="moment-discs" id="moment-discs-whisper"></div>
     <label class="row mt">Or write a word: <input id="whisper-free" maxlength="50" placeholder="optional"></label>
   </div>
+
+  <!-- Diary history modal -->
+  <div class="diary-history-modal hidden" id="diary-history-modal">
+    <div class="diary-history-backdrop" id="diary-history-backdrop"></div>
+    <div class="diary-history-sheet">
+      <div class="diary-history-head">
+        <h3>Your letters to God</h3>
+        <p class="muted small">Only you can see these.</p>
+      </div>
+      <div class="diary-history-list" id="diary-history-list"></div>
+      <div class="diary-history-foot">
+        <button class="ghost small" id="diary-history-close">close</button>
+      </div>
+    </div>
+  </div>
+
   <nav class="bottom-nav">
     <button class="nav-btn" data-screen="home">Home</button>
     <button class="nav-btn" data-screen="walk-launch">Walk</button>
     <button class="nav-btn active" data-screen="whisper-moment">Whisper</button>
-    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="prayer">The Book</button>
     <button class="nav-btn" data-screen="hearth">Hearth</button>
-    <button class="nav-btn" data-screen="saints">Saints</button>
   </nav>
 </section>
 
@@ -240,145 +414,185 @@
   </div>
 </section>
 
-<!-- PRAYER -->
-<section id="screen-prayer" class="screen screen-prayer">
-  <header class="topbar"><div class="brand">Prayer</div></header>
-  <div class="tabs">
-    <button class="tab active" data-tab="petitions">Petitions</button>
-    <button class="tab" data-tab="sick">Sick</button>
-    <button class="tab" data-tab="thanksgiving">Thanksgiving</button>
-    <button class="tab" data-tab="inventory">Inventory</button>
-    <button class="tab" data-tab="dead">Book of the Dead</button>
+<!-- PRAYER -> THE BOOK (illuminated single-page) -->
+<section id="screen-prayer" class="screen screen-prayer screen-thebook">
+  <header class="topbar">
+    <div class="brand">The Book</div>
+  </header>
+  <div class="thebook-subtitle">
+    <p class="muted small"><em>What our family carries to him</em></p>
+    <p class="muted small" id="thebook-count">&nbsp;</p>
   </div>
 
-  <div class="tab-panel active" id="tab-petitions">
-    <div class="card">
-      <h3>Add a petition</h3>
-      <form id="form-petition">
-        <label>Person (optional)<input name="person_name"></label>
-        <label>Petition<textarea name="petition" required></textarea></label>
-        <label>Level
-          <select name="level">
-            <option value="3" selected>Active (3)</option>
-            <option value="4">Ongoing (4)</option>
-            <option value="2">Urgent (2)</option>
-            <option value="1">Emergency (1)</option>
-          </select>
-        </label>
-        <button class="primary" type="submit">Add to prayer</button>
-      </form>
-    </div>
-    <div id="petition-list"></div>
-  </div>
+  <div id="anniversary-banners"></div>
 
-  <div class="tab-panel" id="tab-sick">
-    <div class="card">
-      <h3>Add to the sick list</h3>
-      <form id="form-sick">
-        <label>Person<input name="person_name" required></label>
-        <label>Relationship<input name="relationship"></label>
-        <label>Intention<textarea name="intention" required></textarea></label>
-        <button class="primary" type="submit">Add to prayer</button>
-      </form>
-    </div>
-    <div id="sick-list"></div>
-  </div>
+  <!-- Emergencies (only renders when L1 exist) -->
+  <section class="book-section book-emergencies hidden" id="section-emergencies"></section>
 
-  <div class="tab-panel" id="tab-thanksgiving">
-    <div class="card">
-      <h3>Add thanksgiving</h3>
-      <form id="form-thx">
-        <label>Person (optional)<input name="person_name"></label>
-        <label>Thanksgiving<textarea name="thanksgiving_text" required></textarea></label>
-        <button class="primary" type="submit">Offer thanksgiving</button>
-      </form>
-    </div>
-    <div id="thx-list"></div>
-  </div>
+  <!-- The sick we carry -->
+  <section class="book-section" id="section-sick"></section>
 
-  <div class="tab-panel" id="tab-inventory">
-    <div class="card">
-      <input id="inv-search" placeholder="Search the inventory…">
-    </div>
-    <div id="inv-list"></div>
-  </div>
+  <!-- Our people (the circle) -->
+  <section class="book-section" id="section-people"></section>
 
-  <div class="tab-panel" id="tab-dead">
-    <div class="card" id="dead-add-card">
-      <h3>Add to the Book of the Dead</h3>
-      <form id="form-dead">
-        <label>Full name<input name="full_name" required></label>
-        <label>Relationship<input name="relationship"></label>
-        <label>Birthdate<input type="date" name="birthdate"></label>
-        <label>Day of death<input type="date" name="death_date"></label>
-        <label>Brief story<textarea name="brief_story" placeholder="a few sentences, kept gently"></textarea></label>
-        <button class="primary" type="submit">Add to the Book</button>
-      </form>
+  <!-- What we ask of him -->
+  <section class="book-section" id="section-petitions"></section>
+
+  <!-- The world we carry - wars, calamities, the Church, leaders, peace -->
+  <section class="book-section" id="section-world"></section>
+
+  <!-- The faithful departed -->
+  <section class="book-section" id="section-dead"></section>
+
+  <!-- What he has done (thanksgiving + answered merged) -->
+  <section class="book-section" id="section-answered"></section>
+
+  <!-- The only adding surface in The Book - quiet drawer at the very bottom -->
+  <details class="card collapsible book-add-drawer" id="book-add-drawer">
+    <summary>
+      <span class="add-drawer-glyph">+</span>
+      <span class="add-drawer-title">Add to The Book</span>
+      <span class="muted small">tap when you have a name to add</span>
+    </summary>
+    <div class="book-add-tabs" id="book-add-tabs">
+      <button class="book-add-tab active" data-kind="sick">A sick name</button>
+      <button class="book-add-tab" data-kind="petition">A petition</button>
+      <button class="book-add-tab" data-kind="person">Someone we love</button>
+      <button class="book-add-tab" data-kind="dead">A faithful departed</button>
+      <button class="book-add-tab" data-kind="world">The world (war, peace, the Church)</button>
+      <button class="book-add-tab" data-kind="thx">A thanksgiving</button>
+      <button class="book-add-tab" data-kind="bulk">Bulk paste</button>
     </div>
-    <div id="dead-list"></div>
-  </div>
+    <div class="book-add-pane" id="book-add-pane"></div>
+  </details>
 
   <nav class="bottom-nav">
     <button class="nav-btn" data-screen="home">Home</button>
     <button class="nav-btn" data-screen="walk-launch">Walk</button>
     <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
-    <button class="nav-btn active" data-screen="prayer">Prayer</button>
+    <button class="nav-btn active" data-screen="prayer">The Book</button>
     <button class="nav-btn" data-screen="hearth">Hearth</button>
-    <button class="nav-btn" data-screen="saints">Saints</button>
   </nav>
 </section>
 
 <!-- HEARTH -->
 <section id="screen-hearth" class="screen screen-hearth">
   <header class="topbar"><div class="brand">The Hearth</div></header>
-  <div id="hearth-presence" class="card"></div>
-  <div id="hearth-candles" class="card"></div>
 
-  <div class="card hidden" id="add-member-card">
-    <h3>Add a family member</h3>
-    <p class="muted small">Tatay or Nanay creates the account. You will share the email and password with them.</p>
-    <form id="form-add-member">
-      <label>Display name<input name="display_name" required placeholder="e.g. Joaquin"></label>
-      <label>Email (used for sign-in)<input type="email" name="email" required placeholder="joaquin@manubag.ph"></label>
-      <label>Password<input type="text" name="password" required minlength="6" placeholder="something they can remember"></label>
-      <label>Role
-        <select name="role">
-          <option value="child" selected>Child</option>
-          <option value="grandparent">Grandparent</option>
-          <option value="other">Other (sibling, ninong, etc.)</option>
-          <option value="tatay">Tatay (co-admin)</option>
-          <option value="nanay">Nanay (co-admin)</option>
-        </select>
-      </label>
-      <label>Date of birth (sets age tier)<input type="date" name="date_of_birth"></label>
-      <label>Patron saint (optional)
-        <select name="patron_saint_slug">
-          <option value="">(none yet)</option>
-          <option value="lorenzo-ruiz">St. Lorenzo Ruiz</option>
-          <option value="pedro-calungsod">Bl. Pedro Calungsod</option>
-          <option value="joseph">St. Joseph</option>
-          <option value="mary">Blessed Virgin Mary</option>
-          <option value="therese-of-lisieux">St. Therese of Lisieux</option>
-          <option value="john-paul-ii">St. John Paul II</option>
-          <option value="kateri">St. Kateri Tekakwitha</option>
-          <option value="pier-giorgio-frassati">Bl. Pier Giorgio Frassati</option>
-          <option value="dominic">St. Dominic</option>
-          <option value="cecilia">St. Cecilia</option>
-        </select>
-      </label>
-      <button class="primary" type="submit">Add to the family</button>
-    </form>
-    <div id="add-member-result" class="hidden"></div>
+  <!-- 1. The family rollup - one italic sentence of what the family has given today -->
+  <div class="card hearth-rollup-card" id="hearth-rollup-card">
+    <p class="hearth-rollup" id="hearth-rollup">&nbsp;</p>
   </div>
 
-  <div id="hearth-feed"></div>
+  <!-- 2. The family - saint avatars + halos -->
+  <div class="card hearth-family-card" id="hearth-family-card">
+    <h3>Our family</h3>
+    <div class="hearth-family-row" id="hearth-family-row"></div>
+    <p class="italic-cta">Tap anyone to send a quiet act.</p>
+  </div>
+
+  <!-- 3. The acts ticker - one item at a time, rotates -->
+  <div class="card hearth-ticker-card" id="hearth-ticker-card">
+    <p class="hearth-ticker" id="hearth-ticker">&nbsp;</p>
+  </div>
+
+  <!-- 4. The votive rack - real candles for the Book of Life -->
+  <div class="card hearth-votive-card">
+    <h3>Candles lit today</h3>
+    <div class="votive-rack" id="votive-rack"></div>
+    <p class="italic-cta">Tap an unlit candle to remember them.</p>
+  </div>
+
+  <!-- 5. Housekeeping drawer - parents only -->
+  <details class="card collapsible hidden" id="hearth-housekeeping">
+    <summary><strong>Housekeeping</strong> <span class="muted small">(Tatay/Nanay only - tap to open)</span></summary>
+    <p class="muted small">The two admin chores live here so the family side stays uncluttered.</p>
+
+    <details class="card collapsible" id="prayer-schedule-card">
+      <summary><strong>Pray Without Ceasing - set the rhythm</strong></summary>
+      <p class="muted small"><em>1 Thessalonians 5:17</em></p>
+      <p class="muted small">A bell and a notification will sound on every signed-in device at each hour, even when the app is closed.</p>
+      <form id="form-schedule">
+        <label>Morning Offering / Lauds<input type="time" name="morning_time" required></label>
+        <label>Mid-Morning Prayer (work hour)<input type="time" name="midmorning_time" required></label>
+        <label>Angelus / Regina Caeli<input type="time" name="angelus_time" required></label>
+        <label>Hour of Divine Mercy<input type="time" name="mercy_time" required></label>
+        <label>Family Rosary<input type="time" name="rosary_time" required></label>
+        <label>Night Prayer & Examen (Compline)<input type="time" name="night_time" required></label>
+        <label class="row"><input type="checkbox" name="active" checked> Reminders on</label>
+        <button class="primary" type="submit">Save the rhythm</button>
+      </form>
+      <p id="schedule-notif-state" class="muted small mt"></p>
+      <p id="ios-install-hint" class="muted small hidden">On iPhone or iPad, tap the Share button in Safari and choose <strong>Add to Home Screen</strong> - then open Heavenward from the home-screen icon. iOS only delivers push to installed apps.</p>
+      <button class="ghost" id="btn-test-push" type="button">Send a test notification to this device</button>
+    </details>
+
+    <details class="card collapsible" id="add-member-card">
+      <summary><strong>Add a family member</strong></summary>
+      <p class="muted small">You create the account and share the email and password with them.</p>
+      <form id="form-add-member">
+        <label>Display name<input name="display_name" required placeholder="e.g. Joaquin"></label>
+        <label>Email (used for sign-in)<input type="email" name="email" required placeholder="joaquin@manubag.ph"></label>
+        <label>Password<input type="text" name="password" required minlength="6" placeholder="something they can remember"></label>
+        <label>Role
+          <select name="role">
+            <option value="child" selected>Child</option>
+            <option value="grandparent">Grandparent</option>
+            <option value="other">Other (sibling, ninong, etc.)</option>
+            <option value="tatay">Tatay (co-admin)</option>
+            <option value="nanay">Nanay (co-admin)</option>
+          </select>
+        </label>
+        <label>Date of birth (sets age tier)<input type="date" name="date_of_birth"></label>
+        <label>Patron saint (optional)
+          <select name="patron_saint_slug">
+            <option value="">(none yet)</option>
+            <option value="lorenzo-ruiz">St. Lorenzo Ruiz</option>
+            <option value="pedro-calungsod">Bl. Pedro Calungsod</option>
+            <option value="joseph">St. Joseph</option>
+            <option value="mary">Blessed Virgin Mary</option>
+            <option value="therese-of-lisieux">St. Therese of Lisieux</option>
+            <option value="john-paul-ii">St. John Paul II</option>
+            <option value="kateri">St. Kateri Tekakwitha</option>
+            <option value="pier-giorgio-frassati">Bl. Pier Giorgio Frassati</option>
+            <option value="dominic">St. Dominic</option>
+            <option value="cecilia">St. Cecilia</option>
+          </select>
+        </label>
+        <button class="primary" type="submit">Add to the family</button>
+      </form>
+      <div id="add-member-result" class="hidden"></div>
+    </details>
+  </details>
+
+  <!-- Tap-on-member popover (gestures, no chat) -->
+  <div class="hearth-gestures hidden" id="hearth-gestures">
+    <div class="gestures-backdrop" id="gestures-backdrop"></div>
+    <div class="gestures-sheet">
+      <p class="gestures-name muted small">For <strong id="gestures-name">—</strong></p>
+      <div class="gestures-row">
+        <button class="gesture-btn" data-act="candle" title="Light a candle">
+          <span class="gesture-icon">🕯</span><span class="gesture-label">Light a candle</span>
+        </button>
+        <button class="gesture-btn" data-act="hail-mary" title="Pray a Hail Mary">
+          <span class="gesture-icon">🙏</span><span class="gesture-label">Pray a Hail Mary</span>
+        </button>
+        <button class="gesture-btn" data-act="carry" title="Carry their intention">
+          <span class="gesture-icon">🤲</span><span class="gesture-label">Carry their intention</span>
+        </button>
+        <button class="gesture-btn" data-act="bless" title="Send a blessing">
+          <span class="gesture-icon">✝</span><span class="gesture-label">Send a blessing</span>
+        </button>
+      </div>
+      <button class="ghost small" id="gestures-cancel">never mind</button>
+    </div>
+  </div>
   <nav class="bottom-nav">
     <button class="nav-btn" data-screen="home">Home</button>
     <button class="nav-btn" data-screen="walk-launch">Walk</button>
     <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
-    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="prayer">The Book</button>
     <button class="nav-btn active" data-screen="hearth">Hearth</button>
-    <button class="nav-btn" data-screen="saints">Saints</button>
   </nav>
 </section>
 
@@ -394,6 +608,27 @@
   <div class="night-inner" id="night-body"></div>
   <button class="primary" id="btn-night-examined">I have examined my day.</button>
   <button class="ghost small" id="btn-night-back">Back</button>
+</section>
+
+<!-- MID-MORNING -->
+<section id="screen-midmorning" class="screen screen-midmorning full-screen">
+  <div class="morning-inner card" id="midmorning-body"></div>
+  <button class="primary" id="btn-midmorning-done">I have offered this hour.</button>
+  <button class="ghost small" id="btn-midmorning-back">Back</button>
+</section>
+
+<!-- ANGELUS / REGINA CAELI -->
+<section id="screen-angelus" class="screen screen-angelus full-screen">
+  <div class="morning-inner card" id="angelus-body"></div>
+  <button class="primary" id="btn-angelus-done">I have prayed the Angelus.</button>
+  <button class="ghost small" id="btn-angelus-back">Back</button>
+</section>
+
+<!-- HOUR OF DIVINE MERCY -->
+<section id="screen-mercy" class="screen screen-mercy full-screen">
+  <div class="morning-inner card" id="mercy-body"></div>
+  <button class="primary" id="btn-mercy-done">I have prayed for mercy.</button>
+  <button class="ghost small" id="btn-mercy-back">Back</button>
 </section>
 
 <!-- SAINTS -->
@@ -415,9 +650,8 @@
     <button class="nav-btn" data-screen="home">Home</button>
     <button class="nav-btn" data-screen="walk-launch">Walk</button>
     <button class="nav-btn" data-screen="whisper-moment">Whisper</button>
-    <button class="nav-btn" data-screen="prayer">Prayer</button>
+    <button class="nav-btn" data-screen="prayer">The Book</button>
     <button class="nav-btn" data-screen="hearth">Hearth</button>
-    <button class="nav-btn active" data-screen="saints">Saints</button>
   </nav>
 </section>
 
@@ -427,26 +661,137 @@
   <div id="saint-profile-body" class="card"></div>
 </section>
 
+<!-- Saint picker modal - choose your patron / your avatar -->
+<div class="saint-picker hidden" id="saint-picker">
+  <div class="saint-picker-backdrop" id="saint-picker-backdrop"></div>
+  <div class="saint-picker-sheet">
+    <div class="saint-picker-head">
+      <h3>Choose your patron saint</h3>
+      <p class="muted small" id="saint-picker-current">&nbsp;</p>
+      <input type="search" id="saint-picker-search" placeholder="Search by name or patronage…">
+    </div>
+    <div class="saint-picker-grid" id="saint-picker-grid"></div>
+    <div class="saint-picker-foot">
+      <button class="ghost small" id="saint-picker-close">close</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast" class="toast"></div>
+<div id="prayer-banner" class="prayer-banner hidden">
+  <div class="prayer-banner-inner">
+    <div class="candle-small"><span class="flame"></span><span class="stick"></span></div>
+    <div class="prayer-banner-text">
+      <strong id="prayer-banner-title">Time for prayer.</strong>
+      <p class="muted small" id="prayer-banner-sub">Open the app to begin.</p>
+    </div>
+    <button class="primary" id="prayer-banner-open">Begin</button>
+    <button class="link" id="prayer-banner-dismiss">later</button>
+  </div>
+</div>
 
 <script src="/js/audio.js"></script>
 <script src="/js/api.js"></script>
+<script src="/js/moments.js"></script>
+<script src="/js/avatars.js"></script>
+<script src="/js/saint_picker.js"></script>
 <script src="/js/whisper.js"></script>
 <script src="/js/walk.js"></script>
 <script src="/js/hearth.js"></script>
 <script src="/js/prayer.js"></script>
 <script src="/js/dead.js"></script>
 <script src="/js/hours.js"></script>
+<script src="/js/schedule.js"></script>
 <script src="/js/app.js"></script>
 
 <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js')
-        .then(function(reg) { console.log('Heavenward SW registered:', reg.scope); })
-        .catch(function(err) { console.log('SW registration failed:', err); });
+  // ============================================================
+  // STALE-PROOF UPDATE PIPELINE
+  // ------------------------------------------------------------
+  // The server stamps every served HTML with <html data-build="<HASH>">.
+  // The same hash is the cache name in sw.js and is returned by /version.txt.
+  //
+  // Triple defence against running stale code:
+  //   (1) SW: network-only for HTML/JS/CSS (no cache fallback ever).
+  //   (2) Client: polls /version.txt every 30s + on every visibility change;
+  //       any mismatch with the loaded build = instant location.reload().
+  //   (3) SW: on install, nukes every cache and postMessages all clients to
+  //       reload, so a deploy reaches open tabs in seconds, not on next visit.
+  // ============================================================
+  (function () {
+    var LOADED_BUILD = document.documentElement.dataset.build || '';
+    var __reloading = false;
+    function softReload(reason) {
+      if (__reloading) return;
+      __reloading = true;
+      try { console.log('[heavenward] reload:', reason); } catch (e) {}
+      // Use replace so back-button history stays clean.
+      window.location.replace(window.location.pathname + window.location.search + window.location.hash);
+    }
+
+    // Paint the build chip from the loaded build.
+    function paintChip() {
+      var chip = document.getElementById('build-chip');
+      if (chip) chip.textContent = LOADED_BUILD ? LOADED_BUILD.slice(0, 7) : 'dev';
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', paintChip);
+    } else { paintChip(); }
+
+    // Version polling - always uncached.
+    function checkVersion() {
+      return fetch('/version.txt', { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.text() : null; })
+        .then(function (txt) {
+          if (!txt) return;
+          var cur = txt.trim();
+          if (cur && LOADED_BUILD && cur !== LOADED_BUILD) softReload('build changed ' + LOADED_BUILD + ' -> ' + cur);
+        })
+        .catch(function () { /* offline; will retry on next tick */ });
+    }
+    // 30s heartbeat while open.
+    setInterval(checkVersion, 30 * 1000);
+    // And whenever the tab becomes visible (Android backgrounded then fg'd).
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') checkVersion();
     });
-  }
+    // Once at startup so a stale shell that survived an offline window is caught fast.
+    if (LOADED_BUILD) setTimeout(checkVersion, 1500);
+
+    // Service-worker registration.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
+          .then(function (reg) {
+            // Periodic SW update check (in addition to per-navigation check).
+            setInterval(function () { reg.update().catch(function () {}); }, 60 * 1000);
+            document.addEventListener('visibilitychange', function () {
+              if (document.visibilityState === 'visible') reg.update().catch(function () {});
+            });
+          })
+          .catch(function () { /* SW not supported / blocked; the polling fallback above still works */ });
+
+        // The SW posts 'sw-activated' immediately after a new build takes over.
+        navigator.serviceWorker.addEventListener('message', function (ev) {
+          if (ev.data && ev.data.type === 'sw-activated') softReload('sw activated build ' + ev.data.build);
+        });
+        // controllerchange = the SW that controls this page just changed.
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+          softReload('controllerchange');
+        });
+      });
+    }
+
+    // Build chip = manual escape hatch. With the above, it should rarely be needed.
+    document.addEventListener('click', function (ev) {
+      var t = ev.target;
+      if (t && t.id === 'build-chip') {
+        if (confirm('Fresh-load Heavenward? Clears all caches and reloads.')) {
+          window.location.href = '/reset.html';
+        }
+      }
+    });
+  })();
 </script>
 
 </body>
