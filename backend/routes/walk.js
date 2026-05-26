@@ -2,6 +2,7 @@
 const express = require('express');
 const db = require('../models/db');
 const { requireAuth } = require('../middleware/auth');
+const { phtToday, phtDate } = require('../lib/pht');
 
 const router = express.Router();
 
@@ -21,8 +22,11 @@ db.prepare('CREATE INDEX IF NOT EXISTS idx_pilgrim_user_time ON pilgrim_log (use
 
 const SETS_BY_DOW = ['glorious', 'joyful', 'sorrowful', 'glorious', 'luminous', 'sorrowful', 'joyful'];
 
+// Day-of-week in PHT (Sun=0..Sat=6), so the mystery set flips at Manila midnight,
+// not at UTC midnight (which would be 8am Manila).
 function setForToday(d) {
-  return SETS_BY_DOW[(d || new Date()).getDay()];
+  const dow = d ? d.getDay() : phtDate().getUTCDay();
+  return SETS_BY_DOW[dow];
 }
 
 router.get('/today', requireAuth, (req, res) => {
@@ -72,14 +76,14 @@ router.post('/:id/complete', requireAuth, (req, res) => {
     .run(duration, steps || 0, decades_completed || 5, tail_completed ? 1 : 0, walkId);
   // log to hours_log so the rosary counts as a prayer "hour"
   db.prepare('INSERT INTO hours_log (user_id,hour_type,duration_seconds) VALUES (?,?,?)').run(req.user.id, 'rosary', duration);
-  // increment streak (one walk per day counts)
-  const today = new Date().toISOString().slice(0, 10);
+  // increment streak (one walk per day counts) - PHT calendar day
+  const today = phtToday();
   const last = db.prepare('SELECT last_activity_date,streak_days FROM users WHERE id = ?').get(req.user.id);
   let newStreak = (last && last.streak_days) || 0;
   if (last && last.last_activity_date === today) {
     // same day, no change
   } else {
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const yesterday = phtToday(Date.now() - 86400000);
     newStreak = last && last.last_activity_date === yesterday ? newStreak + 1 : 1;
     db.prepare('UPDATE users SET streak_days = ?, last_activity_date = ? WHERE id = ?').run(newStreak, today, req.user.id);
   }
@@ -91,7 +95,7 @@ router.post('/:id/complete', requireAuth, (req, res) => {
 // Same family, same day = same 50 names in the same order, so all devices line up bead-for-bead.
 router.get('/intentions', requireAuth, (req, res) => {
   const familyId = req.user.family_id;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = phtToday();
 
   const petitions = db.prepare('SELECT id, person_name, petition, level FROM prayer_petitions WHERE family_id = ? AND status = ? ORDER BY level, date_added').all(familyId, 'active');
   const sick      = db.prepare('SELECT id, person_name, intention FROM prayer_sick WHERE family_id = ? AND status = ?').all(familyId, 'active');

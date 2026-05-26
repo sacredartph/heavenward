@@ -19,6 +19,16 @@
     let data;
     try { data = await res.json(); } catch { data = null; }
     if (!res.ok) {
+      // A 401 means the stored token is genuinely no longer valid (e.g. the
+      // account was removed). Rather than leave the page blank and "broken",
+      // clear the dead token and send the user cleanly to the login screen.
+      if (res.status === 401 && t) {
+        try { setToken(null); setUser(null); } catch {}
+        if (typeof window !== 'undefined' && window.showScreen) {
+          try { window.showScreen('login', { replace: true }); } catch {}
+          try { window.toast && window.toast('Please sign in again.'); } catch {}
+        }
+      }
       const err = new Error((data && data.error) || ('HTTP ' + res.status));
       err.status = res.status;
       err.detail = data && data.detail;

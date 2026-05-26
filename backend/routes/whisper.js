@@ -2,6 +2,7 @@
 const express = require('express');
 const db = require('../models/db');
 const { requireAuth } = require('../middleware/auth');
+const { phtToday, phtYearDay } = require('../lib/pht');
 
 const router = express.Router();
 
@@ -50,7 +51,7 @@ router.post('/log', requireAuth, (req, res) => {
   // doctrinal exposure
   try {
     const tags = JSON.parse(w.doctrinal_tags || '[]');
-    const today = new Date().toISOString().slice(0, 10);
+    const today = phtToday();
     const upsert = db.prepare(`INSERT INTO doctrinal_exposure (user_id,area,first_encountered,times_encountered,last_encountered)
       VALUES (?,?,?,1,?)
       ON CONFLICT(user_id,area) DO UPDATE SET times_encountered = times_encountered + 1, last_encountered = ?`);
@@ -149,17 +150,17 @@ const TEACHINGS = [
   { kind: 'beatitude', title: 'Blessed are the peacemakers', source: 'Matthew 5:9', teach: 'Peacemakers carry the calm of Christ into a room.', move: 'Be the first to make peace in one tension you are part of.' }
 ];
 
+// Day-of-year in PHT, so the daily verse / teaching flips at Manila midnight.
 function dayIndexOfYear() {
-  const now = new Date();
-  return Math.floor((Date.now() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000);
+  return phtYearDay();
 }
 
-// Today's Word - daily Bible verse + diary prompt, deterministic per day.
+// Today's Word - daily Bible verse + diary prompt, deterministic per PHT day.
 router.get('/today-word', requireAuth, (req, res) => {
   const idx = dayIndexOfYear();
   const verse = TODAYS_VERSES[idx % TODAYS_VERSES.length];
   const prompt = DIARY_PROMPTS[idx % DIARY_PROMPTS.length];
-  return res.json({ verse, prompt, date: new Date().toISOString().slice(0, 10) });
+  return res.json({ verse, prompt, date: phtToday() });
 });
 
 // A teaching to live - one per day, rotates Gifts -> Fruits -> Works -> Beatitudes.
@@ -239,7 +240,7 @@ router.get('/diary', requireAuth, (req, res) => {
 });
 
 router.get('/diary/today', requireAuth, (req, res) => {
-  const t = new Date().toISOString().slice(0, 10);
+  const t = phtToday();
   const row = db.prepare(`SELECT id, entry_date, verse_ref, verse_text, prompt, body, created_at
     FROM diary_entries WHERE user_id = ? AND entry_date = ? ORDER BY created_at DESC LIMIT 1`).get(req.user.id, t);
   return res.json({ entry: row || null });
@@ -248,7 +249,7 @@ router.get('/diary/today', requireAuth, (req, res) => {
 router.post('/diary', requireAuth, (req, res) => {
   const { body, verse_ref, verse_text, prompt } = req.body || {};
   if (!body || !String(body).trim()) return res.status(400).json({ error: 'body required' });
-  const t = new Date().toISOString().slice(0, 10);
+  const t = phtToday();
   const r = db.prepare(`INSERT INTO diary_entries (user_id, entry_date, verse_ref, verse_text, prompt, body)
     VALUES (?,?,?,?,?,?)`).run(req.user.id, t, verse_ref || null, verse_text || null, prompt || null, String(body).trim());
   return res.json({ id: r.lastInsertRowid, entry_date: t });

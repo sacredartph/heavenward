@@ -2,9 +2,10 @@
 const express = require('express');
 const db = require('../models/db');
 const { requireAuth } = require('../middleware/auth');
+const { phtTodayMMDD } = require('../lib/pht');
 
 const router = express.Router();
-const mmdd = () => new Date().toISOString().slice(5, 10);
+const mmdd = () => phtTodayMMDD();
 
 router.get('/', requireAuth, (req, res) => {
   const cat = req.query.category;
